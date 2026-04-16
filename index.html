@@ -32,23 +32,52 @@
         .catatan-tengah { text-align: center; }
         .catatan-kanan { text-align: right; }
 
-        /* KEYFRAMES ANIMASI */
+        /* ========================================= */
+        /* KEYFRAMES TRANSISI HALAMAN (STAGGERED)    */
+        /* ========================================= */
+        
+        /* 1. FADE (Memudar) */
+        @keyframes fadeMasuk { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeKeluar { from { opacity: 1; } to { opacity: 0; } }
+        /* KUNCI PENTING: Gunakan 'both' (bukan forwards). 'both' memastikan elemen tetap berwujud "from" (opacity: 0) selama masa delay sebelum animasi dimulai! */
+        .masuk-fade { animation: fadeMasuk 0.8s ease-out both; }
+        .hilang-fade { animation: fadeKeluar 0.5s ease-in both; }
+
+        /* 2. SLIDE UP (Meluncur Naik) */
+        @keyframes slideMasuk { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideKeluar { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-40px); } }
+        .masuk-slide { animation: slideMasuk 0.8s ease-out both; }
+        .hilang-slide { animation: slideKeluar 0.5s ease-in both; }
+
+        /* 3. POP UP (Muncul Mengembang - Efek Pantul/Spring) */
+        @keyframes popMasuk { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+        @keyframes popKeluar { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.85); } }
+        .masuk-pop { animation: popMasuk 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+        .hilang-pop { animation: popKeluar 0.4s ease-in both; }
+
+        /* 4. KLIPPING (Menyeka/Wipe dari atas ke bawah) */
+        @keyframes klipMasuk { from { clip-path: inset(0 0 100% 0); opacity: 0.5; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+        @keyframes klipKeluar { from { clip-path: inset(0 0 0 0); opacity: 1; } to { clip-path: inset(100% 0 0 0); opacity: 0.5; } }
+        .masuk-klip { animation: klipMasuk 0.8s ease-in-out both; }
+        .hilang-klip { animation: klipKeluar 0.5s ease-in-out both; }
+
+        /* ========================================= */
+        /* KEYFRAMES ANIMASI GAMBAR                  */
+        /* ========================================= */
         @keyframes denyut { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes goyang { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
         @keyframes pantul { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         @keyframes panZoom { 0% { transform: scale(1) translate(0, 0); } 50% { transform: scale(1.1) translate(-2%, 2%); } 100% { transform: scale(1) translate(0, 0); } }
-        @keyframes masukBawah { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes hilangAtas { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-40px); } }
         @keyframes scrollKiri { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* KELAS ANIMASI */
+        /* KELAS ANIMASI GAMBAR */
         .animasi-denyut { animation: denyut 2s infinite ease-in-out; }
         .animasi-goyang { animation: goyang 1.5s infinite ease-in-out; }
         .animasi-pantul { animation: pantul 1.5s infinite ease-in-out; }
         .animasi-panzoom { animation: panZoom 10s infinite alternate ease-in-out; }
         .animasi-mati { animation: none; }
-        .efek-masuk { animation: masukBawah 0.8s ease-out forwards; }
-        .efek-hilang { animation: hilangAtas 0.6s ease-in forwards; }
+        
+        /* KELAS GALERI */
         .scroll-mati { animation: none !important; }
         .scroll-lambat { animation: scrollKiri 20s linear infinite; }
         .scroll-cepat { animation: scrollKiri 8s linear infinite; }
@@ -74,18 +103,38 @@
     </style>
 </head>
 
-<body class="bg-slate-100 min-h-screen flex flex-col md:flex-row relative"> 
+<body class="bg-slate-100 h-screen flex flex-col md:flex-row relative overflow-hidden"> 
 
     <!-- ======================================================== -->
     <!-- PANEL KONTROL / SIDEBAR (Di Sebelah Kiri)                -->
     <!-- ======================================================== -->
-    <aside class="w-full md:w-1/3 bg-white shadow-xl p-6 overflow-y-auto border-r border-slate-200 z-10">
+    <aside class="w-full md:w-1/3 h-1/2 md:h-full bg-white shadow-xl p-6 overflow-y-auto border-r border-slate-200 z-10">
         <h2 class="text-2xl font-bold text-blue-700 mb-2">Pusat Kendali Layout</h2>
         <p class="text-slate-500 text-sm mb-6">Ubah tombol di bawah, lalu <strong class="text-blue-600">Klik Kotak Kodenya</strong> untuk membaca bedah detail penjelasan materinya.</p>
 
-        <!-- KONTROL 1: Judul Artikel -->
+        <!-- KONTROL 1: Transisi Perpindahan Section -->
+        <div class="mb-8 border-b border-slate-200 pb-6 bg-rose-50 p-4 rounded-xl shadow-sm border border-rose-100">
+            <h3 class="font-bold text-rose-800 mb-3 flex items-center"><span class="bg-rose-200 text-rose-800 px-2 py-1 rounded text-xs mr-2 shadow-sm">1</span> Transisi & Animasi Modern</h3>
+            <p class="text-xs text-rose-600 mb-3 italic">Halaman kini menggunakan animasi masuk 'berantai' (staggered) per blok. Pilih gayanya:</p>
+            
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                <button onclick="aturTransisi('fade')" class="btn-transisi bg-rose-500 text-white py-2 rounded shadow hover:bg-rose-600 transition text-sm font-semibold">Fade (Pudar)</button>
+                <button onclick="aturTransisi('slide')" class="btn-transisi bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm font-semibold">Slide Up</button>
+                <button onclick="aturTransisi('pop')" class="btn-transisi bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm font-semibold">Pop Up</button>
+                <button onclick="aturTransisi('klip')" class="btn-transisi bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm font-semibold">Klipping</button>
+            </div>
+            
+            <div class="flex gap-2 mb-3">
+                <button onclick="animasiMasukAwal()" class="flex-1 border-2 border-rose-500 text-rose-600 py-1.5 rounded hover:bg-rose-100 transition text-xs font-bold">↻ Muat Ulang Halaman</button>
+                <button onclick="gantiSection()" class="flex-1 bg-slate-800 text-white py-1.5 rounded shadow hover:bg-slate-900 transition text-xs font-bold">Ganti Paragraf ❯</button>
+            </div>
+            
+            <div class="bg-slate-900 rounded p-3 shadow-inner"><pre id="kode-transisi" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre></div>
+        </div>
+
+        <!-- KONTROL 2: Judul Artikel -->
         <div class="mb-8 border-b border-slate-200 pb-6">
-            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs mr-2">1</span> Posisi Judul</h3>
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs mr-2">2</span> Posisi Judul</h3>
             <div class="flex gap-2 mb-3">
                 <button onclick="aturJudul('judul-kiri')" class="btn-judul flex-1 bg-blue-500 text-white py-2 rounded shadow hover:bg-blue-600 transition text-sm">Kiri</button>
                 <button onclick="aturJudul('judul-tengah')" class="btn-judul flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Tengah</button>
@@ -94,9 +143,9 @@
             <div class="bg-slate-900 rounded p-3 shadow-inner"><pre id="kode-judul" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre></div>
         </div>
 
-        <!-- KONTROL 2: Gambar Utama -->
+        <!-- KONTROL 3: Gambar Utama -->
         <div class="mb-8 border-b border-slate-200 pb-6">
-            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs mr-2">2</span> Posisi Gambar (Float)</h3>
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs mr-2">3</span> Posisi Gambar (Float)</h3>
             <div class="flex flex-col gap-2 mb-3">
                 <button onclick="aturGambar('gambar-kiri')" class="btn-gambar bg-green-500 text-white py-2 rounded shadow hover:bg-green-600 transition text-sm">Di Kiri Teks (Float Left)</button>
                 <button onclick="aturGambar('gambar-kanan')" class="btn-gambar bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Di Kanan Teks (Float Right)</button>
@@ -105,9 +154,9 @@
             <div class="bg-slate-900 rounded p-3 shadow-inner"><pre id="kode-gambar" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre></div>
         </div>
 
-        <!-- KONTROL 3: Paragraf Teks -->
+        <!-- KONTROL 4: Paragraf Teks -->
         <div class="mb-8 border-b border-slate-200 pb-6">
-            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs mr-2">3</span> Perataan Teks</h3>
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs mr-2">4</span> Perataan Teks</h3>
             <div class="flex gap-2 mb-3">
                 <button onclick="aturTeks('teks-kiri')" class="btn-teks flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Kiri</button>
                 <button onclick="aturTeks('teks-penuh')" class="btn-teks flex-1 bg-purple-500 text-white py-2 rounded shadow hover:bg-purple-600 transition text-sm">Penuh</button>
@@ -116,9 +165,9 @@
             <div class="bg-slate-900 rounded p-3 shadow-inner"><pre id="kode-teks" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre></div>
         </div>
 
-        <!-- KONTROL 4: Aside (Kotak Info) -->
+        <!-- KONTROL 5: Aside (Kotak Info - Mode Dropdown) -->
         <div class="mb-8 border-b border-slate-200 pb-6">
-            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs mr-2">4</span> Kotak Info (Width)</h3>
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs mr-2">5</span> Kotak Info (Dropdown)</h3>
             <div class="flex gap-2 mb-3">
                 <button onclick="aturAside('aside-kiri')" class="btn-aside flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Kiri</button>
                 <button onclick="aturAside('aside-blok')" class="btn-aside flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Penuh</button>
@@ -127,9 +176,9 @@
             <div class="bg-slate-900 rounded p-3 shadow-inner"><pre id="kode-aside" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre></div>
         </div>
 
-        <!-- KONTROL 5: Catatan Kaki -->
+        <!-- KONTROL 6: Catatan Kaki -->
         <div class="mb-8 border-b border-slate-200 pb-6">
-            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs mr-2">5</span> Catatan Kaki</h3>
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs mr-2">6</span> Catatan Kaki</h3>
             <div class="flex gap-2 mb-3">
                 <button onclick="aturCatatan('catatan-kiri')" class="btn-catatan flex-1 bg-gray-500 text-white py-2 rounded shadow hover:bg-gray-600 transition text-sm">Kiri</button>
                 <button onclick="aturCatatan('catatan-tengah')" class="btn-catatan flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Tengah</button>
@@ -138,9 +187,9 @@
             <div class="bg-slate-900 rounded p-3 shadow-inner"><pre id="kode-catatan" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre></div>
         </div>
 
-        <!-- KONTROL 6: Efek Animasi Gambar -->
+        <!-- KONTROL 7: Efek Animasi Gambar -->
         <div class="mb-8 border-b border-slate-200 pb-6">
-            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-cyan-100 text-cyan-700 px-2 py-1 rounded text-xs mr-2">6</span> Animasi (@keyframes)</h3>
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-cyan-100 text-cyan-700 px-2 py-1 rounded text-xs mr-2">7</span> Animasi Gambar</h3>
             <div class="flex gap-2 flex-wrap mb-2">
                 <button onclick="aturAnimasi('animasi-mati')" class="btn-animasi flex-1 bg-cyan-500 text-white py-2 rounded shadow hover:bg-cyan-600 transition text-sm">Diam</button>
                 <button onclick="aturAnimasi('animasi-denyut')" class="btn-animasi flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Denyut</button>
@@ -153,19 +202,9 @@
             <div class="bg-slate-900 rounded p-3 shadow-inner"><pre id="kode-animasi" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre></div>
         </div>
 
-        <!-- KONTROL 7: Transisi Perpindahan Section -->
-        <div class="mb-8 border-b border-slate-200 pb-6">
-            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-rose-100 text-rose-700 px-2 py-1 rounded text-xs mr-2">7</span> Transisi Halaman</h3>
-            <div class="flex flex-col gap-2 mb-3">
-                <button onclick="animasiMasukAwal()" class="bg-rose-500 text-white py-2 rounded shadow hover:bg-rose-600 transition text-sm">Mainkan Animasi Masuk</button>
-                <button onclick="gantiSection()" class="bg-slate-800 text-white py-2 rounded shadow hover:bg-slate-900 transition text-sm">Ganti Section (Keluar & Masuk)</button>
-            </div>
-            <div class="bg-slate-900 rounded p-3 shadow-inner"><pre id="kode-transisi" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre></div>
-        </div>
-
         <!-- KONTROL 8: Galeri Foto Bergerak (Marquee) -->
         <div class="mb-8 border-b border-slate-200 pb-6">
-            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-teal-100 text-teal-700 px-2 py-1 rounded text-xs mr-2">8</span> Animasi Galeri Marquee</h3>
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-teal-100 text-teal-700 px-2 py-1 rounded text-xs mr-2">8</span> Galeri Berjalan</h3>
             <div class="flex gap-2 mb-3">
                 <button onclick="aturGaleri('scroll-mati')" class="btn-galeri flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Diam</button>
                 <button onclick="aturGaleri('scroll-lambat')" class="btn-galeri flex-1 bg-teal-500 text-white py-2 rounded shadow hover:bg-teal-600 transition text-sm">Lambat</button>
@@ -187,7 +226,7 @@
 
         <!-- KONTROL 10: Gambar Sisipan Kecil -->
         <div class="mb-4">
-            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-fuchsia-100 text-fuchsia-700 px-2 py-1 rounded text-xs mr-2">10</span> Gambar Sisipan Paragraf</h3>
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-fuchsia-100 text-fuchsia-700 px-2 py-1 rounded text-xs mr-2">10</span> Gambar Sisipan</h3>
             <div class="flex gap-2 mb-3">
                 <button onclick="aturSisipan('sisipan-kiri')" class="btn-sisipan flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Kiri</button>
                 <button onclick="aturSisipan('sisipan-sembunyi')" class="btn-sisipan flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Sembunyi</button>
@@ -200,65 +239,102 @@
     <!-- ======================================================== -->
     <!-- AREA PREVIEW ARTIKEL (Di Sebelah Kanan)                  -->
     <!-- ======================================================== -->
-    <main class="w-full md:w-2/3 p-4 md:p-8 flex justify-center items-start overflow-y-auto">
-        <article id="artikel-kertas" class="bg-white p-8 md:p-12 w-full max-w-4xl shadow-2xl rounded-lg border border-slate-200 artikel-kontainer clearfix efek-masuk">
+    <main class="w-full md:w-2/3 h-1/2 md:h-full flex flex-col bg-slate-200/50">
+        
+        <!-- TOOLBAR MODE LAYAR (VIEWPORT) -->
+        <div class="bg-slate-800 p-3 flex justify-center items-center gap-4 shadow-md z-20 shrink-0">
+            <span class="text-slate-300 text-sm font-semibold hidden sm:block">🖥️ Mode Tampilan:</span>
+            <div class="flex gap-1 bg-slate-900 rounded-lg p-1">
+                <button onclick="aturLayar('desktop')" class="btn-layar px-4 py-1.5 rounded-md text-sm font-medium transition-all bg-slate-700 text-white shadow-sm flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> Desktop
+                </button>
+                <button onclick="aturLayar('tablet')" class="btn-layar px-4 py-1.5 rounded-md text-sm font-medium transition-all text-slate-400 hover:text-slate-200 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Tablet
+                </button>
+                <button onclick="aturLayar('mobile')" class="btn-layar px-4 py-1.5 rounded-md text-sm font-medium transition-all text-slate-400 hover:text-slate-200 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Mobile
+                </button>
+            </div>
+        </div>
+
+        <!-- SCROLLABLE ARTICLE AREA -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 w-full flex justify-center items-start">
             
-            <h1 id="artikel-judul" class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-6 judul-kiri border-b-2 border-slate-100 pb-4">
-                Pekan Kreativitas Siswa SMAN 1 Nusantara 2026
-            </h1>
+            <!-- Perhatikan hilangnya kelas masuk-fade dari kertas utamanya. Animasi kini diterapkan ke masing-masing blok (stagger-item) di bawah ini -->
+            <article id="artikel-kertas" class="bg-white p-6 md:p-12 w-full max-w-4xl shadow-2xl rounded-lg border border-slate-200 artikel-kontainer clearfix transition-all duration-500 ease-in-out mx-auto overflow-hidden relative">
+                
+                <!-- BLOK 1 -->
+                <h1 id="artikel-judul" class="stagger-item text-3xl md:text-4xl font-extrabold text-slate-800 mb-6 judul-kiri border-b-2 border-slate-100 pb-4">
+                    Pekan Kreativitas Siswa SMAN 1 Nusantara 2026
+                </h1>
 
-            <img id="artikel-gambar" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400&auto=format&fit=crop" alt="Siswa belajar" class="w-full md:w-1/2 max-w-sm rounded-xl shadow-md gambar-kiri animasi-panzoom border-4 border-white">
+                <!-- BLOK 2: SOLUSI WRAPPER (Pembungkus) agar animasi halaman dan animasi efek visual tidak bertabrakan -->
+                <div id="wrapper-gambar" class="stagger-item w-full md:w-1/2 max-w-sm gambar-kiri">
+                    <img id="artikel-gambar" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400&auto=format&fit=crop" alt="Siswa belajar" class="w-full rounded-xl shadow-md animasi-mati border-4 border-white block">
+                </div>
 
-            <div id="artikel-teks" class="teks-penuh text-slate-600 space-y-4">
-                <div id="section-transisi" class="efek-masuk">
-                    <div id="konten-section">
-                        <p>Kegiatan ekstrakurikuler dan kreativitas siswa memegang peranan yang sangat penting dalam pembentukan karakter. Pada minggu ini, sekolah kita menyelenggarakan Pekan Kreativitas Tahunan yang menampilkan berbagai karya seni, inovasi teknologi, dan penampilan budaya dari seluruh perwakilan kelas. Acara ini tidak hanya menjadi ajang unjuk bakat, tetapi juga melatih rasa percaya diri dan kerja sama tim antar siswa.</p>
+                <!-- BLOK 3 (Teks beserta Aside) -->
+                <div id="artikel-teks" class="stagger-item teks-penuh text-slate-600 space-y-4">
+                    <div id="section-transisi">
+                        <div id="konten-section">
+                            <p>Kegiatan ekstrakurikuler dan kreativitas siswa memegang peranan yang sangat penting dalam pembentukan karakter. Pada minggu ini, sekolah kita menyelenggarakan Pekan Kreativitas Tahunan yang menampilkan berbagai karya seni, inovasi teknologi, dan penampilan budaya dari seluruh perwakilan kelas. Acara ini tidak hanya menjadi ajang unjuk bakat, tetapi juga melatih rasa percaya diri dan kerja sama tim antar siswa.</p>
 
-                        <aside id="artikel-aside" class="aside-kanan bg-yellow-50 border-l-4 border-yellow-500 p-4 text-sm font-semibold text-yellow-800 shadow-sm rounded">
-                            💡 <strong>Tahukah Kamu?</strong> SMAN 1 Nusantara telah memenangkan penghargaan sekolah terkreatif tingkat nasional selama 3 tahun berturut-turut!
-                        </aside>
+                            <!-- PERBAIKAN: Aside dengan fungsionalitas Dropdown Akordeon (Bisa diklik) -->
+                            <aside id="artikel-aside" class="aside-kanan bg-yellow-50 border-l-4 border-yellow-500 p-4 text-sm font-semibold text-yellow-800 shadow-sm rounded transition-all duration-300">
+                                <div class="cursor-pointer flex justify-between items-center" onclick="toggleAside()">
+                                    <span class="flex items-center gap-1">💡 <strong class="truncate">Tahukah Kamu?</strong></span>
+                                    <span id="aside-icon" class="transition-transform duration-300 transform rotate-0 text-yellow-600 text-xs ml-2">▼</span>
+                                </div>
+                                <div id="aside-content" class="hidden mt-3 text-yellow-700 font-normal leading-relaxed text-xs">
+                                    SMAN 1 Nusantara telah memenangkan penghargaan sekolah terkreatif tingkat nasional selama 3 tahun berturut-turut berdasarkan survei terbaru!
+                                </div>
+                            </aside>
 
-                        <p>Berbagai pameran telah disusun rapi di aula utama sekolah. Mulai dari lukisan dari ekstrakurikuler seni rupa, robotika sederhana karya klub sains, hingga mading tiga dimensi yang memukau. Kepala sekolah menyampaikan apresiasi yang sangat besar atas antusiasme yang ditunjukkan oleh para peserta didik tahun ini. Diharapkan kegiatan seperti ini dapat terus menumbuhkan semangat belajar yang tidak terbatas hanya pada buku pelajaran di dalam kelas.</p>
+                            <p>Berbagai pameran telah disusun rapi di aula utama sekolah. Mulai dari lukisan dari ekstrakurikuler seni rupa, robotika sederhana karya klub sains, hingga mading tiga dimensi yang memukau. Kepala sekolah menyampaikan apresiasi yang sangat besar atas antusiasme yang ditunjukkan oleh para peserta didik tahun ini. Diharapkan kegiatan seperti ini dapat terus menumbuhkan semangat belajar yang tidak terbatas hanya pada buku pelajaran di dalam kelas.</p>
+                        </div>
+                    </div>
+
+                    <p class="clearfix">
+                        <img id="gambar-sisipan" src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=200&auto=format&fit=crop" class="sisipan-kanan shadow-sm border-2 border-white" alt="Ilustrasi kecil">
+                        Mari kita dukung terus karya teman-teman kita! Jangan lupa untuk mengunjungi stan pameran pada jam istirahat dan berikan suara kalian untuk karya terfavorit. Belajar tidak melulu soal teori, melainkan bagaimana kita mengaplikasikan ilmu tersebut menjadi sebuah karya yang bermanfaat bagi lingkungan sekitar. Kehadiran kalian akan menjadi penyemangat bagi teman-teman yang telah berusaha keras menampilkan karya terbaik mereka di pekan ini.
+                    </p>
+                </div>
+
+                <!-- BLOK 4 -->
+                <div class="stagger-item mt-8 pt-6 border-t border-slate-200">
+                    <h4 class="text-lg font-bold text-slate-700 mb-4">Sorotan Karya Terbaik</h4>
+                    <div id="artikel-grid" class="grid-3-kolom transition-all duration-500">
+                        <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 1">
+                        <img src="https://images.unsplash.com/photo-1560421683-6856ea585c78?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 2">
+                        <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 3">
                     </div>
                 </div>
 
-                <p class="clearfix">
-                    <img id="gambar-sisipan" src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=200&auto=format&fit=crop" class="sisipan-kanan shadow-sm border-2 border-white" alt="Ilustrasi kecil">
-                    Mari kita dukung terus karya teman-teman kita! Jangan lupa untuk mengunjungi stan pameran pada jam istirahat dan berikan suara kalian untuk karya terfavorit. Belajar tidak melulu soal teori, melainkan bagaimana kita mengaplikasikan ilmu tersebut menjadi sebuah karya yang bermanfaat bagi lingkungan sekitar. Kehadiran kalian akan menjadi penyemangat bagi teman-teman yang telah berusaha keras menampilkan karya terbaik mereka di pekan ini.
-                </p>
-            </div>
-
-            <div class="mt-8 pt-6 border-t border-slate-200">
-                <h4 class="text-lg font-bold text-slate-700 mb-4">Sorotan Karya Terbaik</h4>
-                <div id="artikel-grid" class="grid-3-kolom transition-all duration-500">
-                    <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 1">
-                    <img src="https://images.unsplash.com/photo-1560421683-6856ea585c78?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 2">
-                    <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 3">
-                </div>
-            </div>
-
-            <div class="mt-8 pt-6 border-t border-slate-200">
-                <h4 class="text-lg font-bold text-slate-700 mb-4">Galeri Dokumentasi</h4>
-                <div class="w-full overflow-hidden relative rounded-lg bg-slate-50 border border-slate-200 py-4">
-                    <div id="galeri-scroll" class="flex gap-4 w-max scroll-lambat">
-                        <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
-                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
-                        <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
-                        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
-                        <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
-                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
-                        <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
-                        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                <!-- BLOK 5 -->
+                <div class="stagger-item mt-8 pt-6 border-t border-slate-200">
+                    <h4 class="text-lg font-bold text-slate-700 mb-4">Galeri Dokumentasi</h4>
+                    <div class="w-full overflow-hidden relative rounded-lg bg-slate-50 border border-slate-200 py-4">
+                        <div id="galeri-scroll" class="flex gap-4 w-max scroll-lambat">
+                            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                            <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                            <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="mt-8 pt-4 border-t border-slate-200">
-                <p id="artikel-catatan" class="catatan-kiri text-xs text-slate-500 italic">
-                    * Artikel ini disumbangkan oleh Tim Jurnalistik Sekolah. Dokumentasi foto oleh Ekskul Fotografi.
-                </p>
-            </div>
-        </article>
+                <!-- BLOK 6 -->
+                <div class="stagger-item mt-8 pt-4 border-t border-slate-200">
+                    <p id="artikel-catatan" class="catatan-kiri text-xs text-slate-500 italic">
+                        * Artikel ini disumbangkan oleh Tim Jurnalistik Sekolah. Dokumentasi foto oleh Ekskul Fotografi.
+                    </p>
+                </div>
+            </article>
+        </div>
     </main>
 
     <!-- ======================================================== -->
@@ -266,7 +342,6 @@
     <!-- ======================================================== -->
     <div id="modal-detail" class="fixed inset-0 bg-slate-900/80 hidden z-50 flex items-center justify-center p-4 md:p-10 opacity-0 transition-opacity duration-300">
         <div class="bg-[#1e1e1e] rounded-xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-slate-600 transform scale-95 transition-transform duration-300">
-            <!-- Header Modal -->
             <div class="flex justify-between items-center p-4 border-b border-slate-700 bg-slate-800 rounded-t-xl">
                 <h3 class="text-white font-bold md:text-lg flex items-center">
                     <span class="bg-blue-500 text-white px-2 py-1 rounded mr-3 text-sm">💡 Bedah Kode</span> 
@@ -274,11 +349,9 @@
                 </h3>
                 <button onclick="tutupModal()" class="text-slate-400 hover:text-white text-3xl leading-none px-2 focus:outline-none">&times;</button>
             </div>
-            <!-- Body Modal: Tempat kode dan penjelasan disuntikkan -->
             <div class="p-6 overflow-y-auto flex-1 font-mono text-sm leading-relaxed whitespace-pre-wrap break-words" id="kode-detail-konten">
                 <!-- Konten disuntikkan dari JS -->
             </div>
-            <!-- Footer Modal -->
             <div class="p-4 border-t border-slate-700 bg-slate-800 rounded-b-xl flex justify-end">
                 <button onclick="tutupModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold transition shadow-lg focus:outline-none">Paham, Tutup Penjelasan</button>
             </div>
@@ -289,27 +362,38 @@
     <!-- LOGIKA JAVASCRIPT                                        -->
     <!-- ======================================================== -->
     <script>
+        let currentTransisi = 'fade'; 
         let currentJudul = 'judul-kiri';
         let currentGambar = 'gambar-kiri';
         let currentTeks = 'teks-penuh';
         let currentAside = 'aside-kanan';
         let currentCatatan = 'catatan-kiri';
-        let currentAnimasi = 'animasi-panzoom'; 
+        let currentAnimasi = 'animasi-mati'; 
         let currentGaleri = 'scroll-lambat'; 
         let currentGrid = 'grid-3-kolom';
         let currentSisipan = 'sisipan-kanan';
         let sectionAktif = 1;
 
-        // --- SISTEM MODAL DAN RENDER KODE LENGKAP ---
+        // --- SISTEM DROPDOWN ASIDE BARU ---
+        function toggleAside() {
+            const content = document.getElementById('aside-content');
+            const icon = document.getElementById('aside-icon');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)'; // Putar ikon panah ke atas
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)'; // Putar kembali ke bawah
+            }
+        }
 
+        // --- SISTEM MODAL DAN RENDER KODE LENGKAP ---
         function bukaModalDetail(htmlAman, penjelasanDetail) {
             const modal = document.getElementById('modal-detail');
             const konten = document.getElementById('kode-detail-konten');
             
-            // Masukkan HTML dan Penjelasan CSS yang mendetail
             konten.innerHTML = `<span class="text-blue-300 text-xs font-bold tracking-wider uppercase border-b border-blue-800 mb-2 block pb-1">&lt;!-- Struktur HTML --&gt;</span>\n<span class="text-blue-200">${htmlAman}</span>\n\n\n<span class="text-green-400 text-xs font-bold tracking-wider uppercase border-b border-green-800 mb-2 block pb-1">/* --- Logika & Penjelasan CSS --- */</span>\n<span class="text-green-300">${penjelasanDetail}</span>`;
             
-            // Animasi memunculkan modal
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
@@ -321,44 +405,33 @@
             const modal = document.getElementById('modal-detail');
             modal.classList.add('opacity-0');
             modal.querySelector('div').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
 
         function renderKode(elementId, htmlStr, cssSingkat, penjelasanDetail) {
             const pre = document.getElementById(elementId);
             if (pre) {
                 const htmlAman = htmlStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                
-                // Tampilan kotak kecil di layar utama
                 pre.innerHTML = `<span class="text-blue-300">&lt;!-- HTML --&gt;\n${htmlAman}</span>\n\n<span class="text-green-400">/* CSS */\n${cssSingkat}</span>`;
                 
                 const parentDiv = pre.parentElement;
-                
-                // Mengubah kotak kode menjadi tombol besar yang bisa diklik
                 parentDiv.classList.add('cursor-pointer', 'relative', 'group', 'transition-all', 'hover:ring-2', 'hover:ring-blue-400');
                 parentDiv.title = "Klik untuk membaca penjelasan detail kode ini";
                 
-                // Menambahkan label "Klik untuk bedah kode" yang muncul saat kursor didekatkan (hover)
                 if(!parentDiv.querySelector('.label-detail')) {
                     const label = document.createElement('div');
                     label.className = 'label-detail absolute bottom-2 right-2 text-[10px] bg-blue-600 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity font-sans shadow-lg flex items-center gap-1';
                     label.innerHTML = '🔍 Klik untuk bedah kode';
                     parentDiv.appendChild(label);
                 }
-
-                // Ketika kotak hitam diklik, panggil modal popup
-                parentDiv.onclick = function() {
-                    bukaModalDetail(htmlAman, penjelasanDetail);
-                };
+                parentDiv.onclick = function() { bukaModalDetail(htmlAman, penjelasanDetail); };
             }
         }
 
         function updateTampilanTombol(tipe, kelasAktif) {
             const buttons = document.querySelectorAll(`.btn-${tipe}`);
             buttons.forEach(btn => {
-                btn.classList.remove('bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-yellow-500', 'bg-gray-500', 'bg-cyan-500', 'bg-teal-500', 'bg-indigo-500', 'bg-fuchsia-500', 'text-white');
+                btn.classList.remove('bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-yellow-500', 'bg-gray-500', 'bg-cyan-500', 'bg-teal-500', 'bg-indigo-500', 'bg-fuchsia-500', 'bg-rose-500', 'text-white');
                 btn.classList.add('bg-slate-200', 'text-slate-700');
                 if (btn.getAttribute('onclick').includes(kelasAktif)) {
                     btn.classList.remove('bg-slate-200', 'text-slate-700');
@@ -371,25 +444,137 @@
                     if(tipe === 'galeri') btn.classList.add('bg-teal-500', 'text-white');
                     if(tipe === 'grid') btn.classList.add('bg-indigo-500', 'text-white');
                     if(tipe === 'sisipan') btn.classList.add('bg-fuchsia-500', 'text-white');
+                    if(tipe === 'transisi') btn.classList.add('bg-rose-500', 'text-white');
                 }
             });
         }
 
-        // --- FUNGSI PENGATUR KELAS & PEMBENTUK TEKS PENJELASAN ---
+        function aturLayar(ukuran) {
+            const artikel = document.getElementById('artikel-kertas');
+            const buttons = document.querySelectorAll('.btn-layar');
+            artikel.classList.remove('max-w-4xl', 'max-w-2xl', 'max-w-sm');
+
+            if (ukuran === 'desktop') {
+                artikel.classList.add('max-w-4xl'); 
+            } else if (ukuran === 'tablet') {
+                artikel.classList.add('max-w-2xl'); 
+            } else if (ukuran === 'mobile') {
+                artikel.classList.add('max-w-sm');  
+            }
+
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-slate-700', 'text-white', 'shadow-sm');
+                btn.classList.add('text-slate-400');
+                if (btn.getAttribute('onclick').includes(ukuran)) {
+                    btn.classList.remove('text-slate-400');
+                    btn.classList.add('bg-slate-700', 'text-white', 'shadow-sm');
+                }
+            });
+        }
+
+        // --- 1. FUNGSI TRANSISI DAN ANIMASI STAGGERED (BERANTAI) ---
+
+        function aturTransisi(gaya) {
+            currentTransisi = gaya;
+            updateTampilanTombol('transisi', gaya);
+            
+            let cssSingkat = "", penjelasanDetail = "";
+
+            if (gaya === 'fade') {
+                cssSingkat = `@keyframes fadeMasuk { from { opacity: 0; } to { opacity: 1; } }\n.masuk-fade { animation: fadeMasuk 0.8s ease-out both; }`;
+                penjelasanDetail = `/* --- TRANSISI FADE STAGGER (MEMUDAR BERURUTAN) --- */\n@keyframes fadeMasuk {\n  from { opacity: 0; } /* 0 = Tembus pandang total */\n  to { opacity: 1; } /* 1 = Jelas sepenuhnya */\n}\n\n.masuk-fade {\n  /* Menggunakan 'both' (bukan forwards) SANGAT KRUSIAL di sini.\n     Karena Javascript memberikan jeda masuk/delay yang berbeda pada tiap blok (0 detik, 0.15 detik, dst),\n     'both' memaksa elemen untuk tetap bersembunyi (berada di posisi 0%) selama waktu tunggu tersebut.\n     Sehingga elemen muncul berurutan bagai efek kartu domino! */\n  animation: fadeMasuk 0.8s ease-out both;\n}`;
+            } else if (gaya === 'slide') {
+                cssSingkat = `@keyframes slideMasuk { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }\n.masuk-slide { animation: slideMasuk 0.8s ease-out both; }`;
+                penjelasanDetail = `/* --- TRANSISI SLIDE UP STAGGER (MELUNCUR BERURUTAN) --- */\n@keyframes slideMasuk {\n  from { \n    opacity: 0; \n    transform: translateY(40px); /* Memulai dari posisi 40 pixel lebih rendah */\n  }\n  to { \n    opacity: 1; \n    transform: translateY(0); /* Kembali ke posisi asal */\n  }\n}\n\n.masuk-slide {\n  /* Menggunakan 'both' agar saat menunggu gilirannya masuk (didapatkan dari style animation-delay Javascript),\n     elemen ini akan diam tersembunyi di bawah layar terlebih dahulu. */\n  animation: slideMasuk 0.8s ease-out both;\n}`;
+            } else if (gaya === 'pop') {
+                cssSingkat = `@keyframes popMasuk { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }\n.masuk-pop { animation: popMasuk 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }`;
+                penjelasanDetail = `/* --- TRANSISI POP UP STAGGER (MENGEMBANG BERURUTAN) --- */\n@keyframes popMasuk {\n  from { opacity: 0; transform: scale(0.85); }\n  to { opacity: 1; transform: scale(1); }\n}\n\n.masuk-pop {\n  /* Trik Pro: Menggunakan 'cubic-bezier(0.175, 0.885, 0.32, 1.275)' untuk menciptakan efek pantulan (spring/bounce) yang realistis di akhir animasi. */\n  animation: popMasuk 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;\n}`;
+            } else if (gaya === 'klip') {
+                cssSingkat = `@keyframes klipMasuk { from { clip-path: inset(0 0 100% 0); opacity: 0.5; } to { clip-path: inset(0 0 0 0); opacity: 1; } }\n.masuk-klip { animation: klipMasuk 0.8s ease-in-out both; }`;
+                penjelasanDetail = `/* --- TRANSISI KLIPPING STAGGER (MENYEKA BERURUTAN) --- */\n@keyframes klipMasuk {\n  from { \n    /* 'inset(top right bottom left)' -> 'inset(0 0 100% 0)' memotong layar utuh dari bawah hingga 100% (hilang). */\n    clip-path: inset(0 0 100% 0); \n    opacity: 0.5; \n  }\n  to { \n    /* 'inset(0 0 0 0)' mengembalikan potongan ke bentuk utuh. Hasilnya seperti tirai ditarik ke bawah. */\n    clip-path: inset(0 0 0 0); \n    opacity: 1; \n  }\n}\n\n.masuk-klip {\n  animation: klipMasuk 0.8s ease-in-out both;\n}`;
+            }
+
+            renderKode('kode-transisi', `<article>\n  <!-- Atribut animation-delay ditambahkan oleh Javascript secara otomatis -->\n  <h1 class="masuk-${gaya}" style="animation-delay: 0s">Judul</h1>\n  <img class="masuk-${gaya}" style="animation-delay: 0.15s">\n  <div class="masuk-${gaya}" style="animation-delay: 0.3s">Teks</div>\n</article>`, cssSingkat, penjelasanDetail);
+
+            animasiMasukAwal();
+        }
+
+        // Animasi domino (stagger) yang diaplikasikan ke beberapa blok
+        function animasiMasukAwal() {
+            // Mencari seluruh elemen blok yang memiliki kelas 'stagger-item'
+            const items = document.querySelectorAll('.stagger-item');
+            
+            items.forEach((item, index) => {
+                // Bersihkan kelas animasi sisa yang lama
+                item.className = item.className.replace(/masuk-\w+/g, '').replace(/hilang-\w+/g, '').trim();
+                
+                // Paksa browser membaca ulang perubahan struktur sebelum menambahkan kelas (reflow trick)
+                void item.offsetWidth; 
+                
+                // KUNCI ANIMASI MODERN: Tambahkan penundaan/delay (0s, 0.15s, 0.30s, dst)
+                item.style.animationDelay = `${index * 0.15}s`;
+                
+                // Terapkan kembali kelas animasi
+                item.classList.add(`masuk-${currentTransisi}`);
+            });
+        }
+
+        // Animasi untuk mengganti isi paragraf di tengah artikel (Section Transisi)
+        function gantiSection() {
+            const wadah = document.getElementById('section-transisi');
+            const konten = document.getElementById('konten-section');
+            
+            wadah.className = wadah.className.replace(/masuk-\w+/g, '').replace(/hilang-\w+/g, '').trim();
+            wadah.style.animationDelay = '0s'; // Nol-kan delay agar segera bereaksi saat tombol ditekan
+            wadah.classList.add(`hilang-${currentTransisi}`);
+
+            setTimeout(() => {
+                if(sectionAktif === 1) {
+                    konten.innerHTML = `<h4 class="text-xl font-bold text-slate-700 mb-2 mt-4 border-l-4 border-blue-500 pl-3">Ragam Lomba Hari Kedua</h4><p>Selain pameran seni, kompetisi olahraga dan e-sports juga turut memeriahkan pekan ini. Pertandingan final basket akan diadakan di lapangan utama pada hari Rabu siang.</p>`;
+                    sectionAktif = 2;
+                } else {
+                    konten.innerHTML = `<p>Kegiatan ekstrakurikuler memegang peranan penting...</p>
+                        <aside id="artikel-aside" class="${currentAside} bg-yellow-50 border-l-4 border-yellow-500 p-4 text-sm font-semibold text-yellow-800 shadow-sm rounded mt-4 transition-all duration-300">
+                            <div class="cursor-pointer flex justify-between items-center" onclick="toggleAside()">
+                                <span class="flex items-center gap-1">💡 <strong class="truncate">Tahukah Kamu?</strong></span>
+                                <span id="aside-icon" class="transition-transform duration-300 transform rotate-0 text-yellow-600 text-xs ml-2">▼</span>
+                            </div>
+                            <div id="aside-content" class="hidden mt-3 text-yellow-700 font-normal leading-relaxed text-xs">
+                                SMAN 1 Nusantara telah memenangkan penghargaan sekolah terkreatif tingkat nasional selama 3 tahun berturut-turut berdasarkan survei terbaru!
+                            </div>
+                        </aside>
+                        <p class="mt-4">Berbagai pameran telah disusun rapi...</p>`;
+                    sectionAktif = 1;
+                }
+                
+                wadah.className = wadah.className.replace(/masuk-\w+/g, '').replace(/hilang-\w+/g, '').trim();
+                wadah.style.animationDelay = '0s'; // Pastikan tidak ada delay
+                void wadah.offsetWidth; 
+                wadah.classList.add(`masuk-${currentTransisi}`);
+                
+            }, 500); 
+        }
+
+        // --- FUNGSI PENGATUR KELAS LAINNYA ---
 
         function aturJudul(kelasBaru) {
-            document.getElementById('artikel-judul').className = `text-3xl md:text-4xl font-extrabold text-slate-800 mb-6 border-b-2 border-slate-100 pb-4 ${kelasBaru}`;
+            const el = document.getElementById('artikel-judul');
+            el.classList.remove(currentJudul);
+            el.classList.add(kelasBaru);
             currentJudul = kelasBaru; updateTampilanTombol('judul', kelasBaru);
             
             let nilaiAlign = kelasBaru.split('-')[1];
             let cssSingkat = `.${kelasBaru} { text-align: ${nilaiAlign}; }`;
-            let penjelasanDetail = `.${kelasBaru} {\n  /* Properti 'text-align' mengatur perataan (alignment) khusus untuk elemen teks di dalam suatu kontainer.\n     - 'left': Teks akan merapat ke batas kiri (Ini adalah cara natural manusia membaca, default web).\n     - 'center': Teks ditarik persis ke tengah halaman.\n     - 'right': Teks merapat ke batas kanan. */\n  text-align: ${nilaiAlign};\n}`;
+            let penjelasanDetail = `.${kelasBaru} {\n  /* Properti 'text-align' mengatur perataan (alignment) khusus untuk elemen teks di dalam suatu kontainer.\n     - 'left': Teks merapat ke batas kiri (Ini adalah cara natural manusia membaca, default web).\n     - 'center': Teks ditarik persis ke tengah halaman.\n     - 'right': Teks merapat ke batas kanan. */\n  text-align: ${nilaiAlign};\n}`;
             
             renderKode('kode-judul', `<h1 class="${kelasBaru}">Pekan Kreativitas...</h1>`, cssSingkat, penjelasanDetail);
         }
 
         function aturGambar(kelasBaru) {
-            document.getElementById('artikel-gambar').className = `w-full md:w-1/2 max-w-sm rounded-xl shadow-md border-4 border-white ${currentAnimasi} ${kelasBaru}`;
+            // PERUBAHAN: Kini posisi gambar mengatur elemen Wrapper-nya, bukan <img> langsung
+            const el = document.getElementById('wrapper-gambar');
+            el.classList.remove(currentGambar);
+            el.classList.add(kelasBaru);
             currentGambar = kelasBaru; updateTampilanTombol('gambar', kelasBaru);
             
             let cssSingkat = "", penjelasanDetail = "";
@@ -397,152 +582,128 @@
                 let arah = kelasBaru.split('-')[1];
                 let margin = arah === 'kiri' ? 'margin-right' : 'margin-left';
                 cssSingkat = `.${kelasBaru} {\n  float: ${arah};\n  ${margin}: 20px;\n}`;
-                penjelasanDetail = `.${kelasBaru} {\n  /* Properti 'float: ${arah}' ibarat mencabut gambar dari susunan ke bawah, lalu melemparkannya merapat ke dinding ${arah}.\n     Efek hebatnya: Elemen teks (paragraf) yang ada di bawahnya akan mengalir naik, mengisi ruang kosong di sebelah gambar tersebut (Text Wrapping). */\n  float: ${arah};\n\n  /* Karena gambar dan teks sekarang bersebelahan, kita butuh '${margin}: 20px'.\n     Ini memberikan jarak aman (bumper) 20 pixel agar tulisan tidak menabrak dan menempel pada sisi gambar. */\n  ${margin}: 20px;\n}`;
+                penjelasanDetail = `/* PERHATIAN: Dalam web modern, kita sering meletakkan gambar di dalam sebuah kotak (wrapper) <div>. Kita memberikan float pada kotaknya, bukan langsung pada gambarnya agar animasinya tidak bertabrakan! */\n\n.${kelasBaru} {\n  /* Properti 'float: ${arah}' ibarat mencabut elemen dari susunan teks, lalu melemparkannya merapat ke dinding ${arah}.\n     Efek hebatnya: Elemen teks (paragraf) yang ada di bawahnya akan mengalir naik dan mengisi ruang kosong di sebelahnya (Text Wrapping). */\n  float: ${arah};\n\n  /* Memberikan jarak aman (bumper) 20 pixel agar tulisan tidak menabrak gambar. */\n  ${margin}: 20px;\n}`;
             } else {
                 cssSingkat = `.${kelasBaru} {\n  display: block;\n  margin: 0 auto;\n}`;
-                penjelasanDetail = `.${kelasBaru} {\n  /* 'display: block' memaksa elemen (gambar) untuk menjadi sebuah kotak penuh yang menguasai satu baris secara utuh.\n     Akibatnya, teks tidak akan diizinkan berada di sebelah kiri atau kanannya. */\n  display: block;\n\n  /* 'margin: 0 auto' adalah trik klasik web designer untuk meletakkan elemen di tengah layar.\n     - '0': artinya jarak margin atas & bawah adalah nol.\n     - 'auto': artinya browser disuruh menghitung sisa ruang kosong di layar kiri dan kanan, lalu membaginya sama rata secara otomatis. */\n  margin: 0 auto;\n}`;
+                penjelasanDetail = `.${kelasBaru} {\n  /* 'display: block' memaksa elemen menjadi kotak penuh yang menguasai satu baris.\n     Teks tidak diizinkan berada di sebelahnya. */\n  display: block;\n\n  /* 'margin: 0 auto' meletakkan elemen persis di tengah layar.\n     - '0': jarak atas bawah nol.\n     - 'auto': browser otomatis membagi rata sisa ruang kosong di sisi kiri dan kanan. */\n  margin: 0 auto;\n}`;
             }
-            renderKode('kode-gambar', `<img src="foto.jpg" class="${kelasBaru}">`, cssSingkat, penjelasanDetail);
+            // HTML untuk media belajarnya diperbarui menjadi <div><img...
+            renderKode('kode-gambar', `<div class="pembungkus ${kelasBaru}">\n  <img src="foto.jpg">\n</div>`, cssSingkat, penjelasanDetail);
         }
 
         function aturTeks(kelasBaru) {
-            document.getElementById('artikel-teks').className = `text-slate-600 space-y-4 ${kelasBaru}`;
+            const el = document.getElementById('artikel-teks');
+            el.classList.remove(currentTeks);
+            el.classList.add(kelasBaru);
+            
             currentTeks = kelasBaru; updateTampilanTombol('teks', kelasBaru);
             
             let nilaiAlign = kelasBaru === 'teks-penuh' ? 'justify' : kelasBaru.split('-')[1];
             let cssSingkat = `.${kelasBaru} { text-align: ${nilaiAlign}; }`;
-            let penjelasanDetail = `.${kelasBaru} {\n  /* 'text-align' mengatur paragraf teks ini.\n     Dalam kasus '${nilaiAlign}', teks dipaksa rata dengan batas kiri dan batas kanan sekaligus, mirip format koran atau buku cetak resmi.\n     Browser akan otomatis meregangkan atau mempersempit spasi antar kata di setiap baris agar batas sisinya terlihat lurus. */\n  text-align: ${nilaiAlign};\n}`;
+            let penjelasanDetail = `.${kelasBaru} {\n  /* Dalam kasus '${nilaiAlign}', teks dipaksa rata dengan batas kiri dan batas kanan sekaligus, mirip format koran.\n     Browser akan otomatis meregangkan atau mempersempit spasi antar kata agar batas sisinya lurus. */\n  text-align: ${nilaiAlign};\n}`;
             
             renderKode('kode-teks', `<div class="${kelasBaru}">\n  <p>Paragraf teks...</p>\n</div>`, cssSingkat, penjelasanDetail);
         }
 
         function aturAside(kelasBaru) {
-            document.getElementById('artikel-aside').className = `bg-yellow-50 border-l-4 border-yellow-500 p-4 text-sm font-semibold text-yellow-800 shadow-sm rounded mt-4 ${kelasBaru}`;
+            const el = document.getElementById('artikel-aside');
+            el.classList.remove(currentAside);
+            el.classList.add(kelasBaru);
             currentAside = kelasBaru; updateTampilanTombol('aside', kelasBaru);
             
             let cssSingkat = "", penjelasanDetail = "";
             if(kelasBaru === 'aside-kiri' || kelasBaru === 'aside-kanan') {
                 let arah = kelasBaru.split('-')[1];
                 cssSingkat = `.${kelasBaru} { float: ${arah}; width: 35%; }`;
-                penjelasanDetail = `.${kelasBaru} {\n  /* Mendorong kotak informasi ke batas ${arah} halaman, agar teks utama bisa mengalir di sebelahnya. */\n  float: ${arah};\n\n  /* 'width: 35%' sangat penting. Alih-alih memberikan ukuran pasti (seperti 200px), kita menggunakan persentase.\n     Artinya kotak kuning ini hanya boleh memakan 35% dari ruang layar yang ada.\n     Jika layar di-zoom atau dibuka di HP, kotaknya akan otomatis mengecil (Responsif). */\n  width: 35%;\n}`;
+                penjelasanDetail = `.${kelasBaru} {\n  float: ${arah};\n\n  /* 'width: 35%' sangat penting. Menggunakan persentase membuat lebar kotak ini beradaptasi (responsif) jika dibuka di HP. */\n  width: 35%;\n}`;
             } else {
                 cssSingkat = `.${kelasBaru} { display: block; width: 100%; }`;
-                penjelasanDetail = `.${kelasBaru} {\n  /* Mematikan efek float, mengubah kotak menjadi blok biasa. */\n  display: block;\n\n  /* 'width: 100%' menyuruh kotak untuk memanjang memenuhi seluruh batas wadahnya dari ujung kiri hingga kanan. */\n  width: 100%;\n}`;
+                penjelasanDetail = `.${kelasBaru} {\n  display: block;\n\n  /* 'width: 100%' menyuruh kotak untuk memanjang memenuhi seluruh batas wadahnya. */\n  width: 100%;\n}`;
             }
-            renderKode('kode-aside', `<aside class="${kelasBaru}">\n  💡 Info...\n</aside>`, cssSingkat, penjelasanDetail);
+            renderKode('kode-aside', `<aside class="${kelasBaru}">\n  <!-- Klik pada blok untuk melihat deskripsi berkat trik toggle Javascript -->\n  <div onclick="toggleAside()">💡 Info ▼</div>\n  <div id="aside-content" class="hidden">Deskripsi...</div>\n</aside>`, cssSingkat, penjelasanDetail);
         }
 
         function aturCatatan(kelasBaru) {
-            document.getElementById('artikel-catatan').className = `text-xs text-slate-500 italic ${kelasBaru}`;
+            const el = document.getElementById('artikel-catatan');
+            el.classList.remove(currentCatatan);
+            el.classList.add(kelasBaru);
             currentCatatan = kelasBaru; updateTampilanTombol('catatan', kelasBaru);
             let nilaiAlign = kelasBaru.split('-')[1];
-            
-            renderKode('kode-catatan', `<p class="${kelasBaru}">\n  * Artikel ini...\n</p>`, `.${kelasBaru} { text-align: ${nilaiAlign}; }`, `.${kelasBaru} {\n  /* Sama seperti pengaturan judul teks, kita menggunakan 'text-align: ${nilaiAlign}' untuk meletakkan catatan kaki di posisi yang diinginkan. */\n  text-align: ${nilaiAlign};\n}`);
+            renderKode('kode-catatan', `<p class="${kelasBaru}">\n  * Artikel ini...\n</p>`, `.${kelasBaru} { text-align: ${nilaiAlign}; }`, `.${kelasBaru} {\n  text-align: ${nilaiAlign};\n}`);
         }
 
         function aturAnimasi(kelasBaru) {
-            document.getElementById('artikel-gambar').className = `w-full md:w-1/2 max-w-sm rounded-xl shadow-md border-4 border-white ${currentGambar} ${kelasBaru}`;
+            const el = document.getElementById('artikel-gambar');
+            el.classList.remove(currentAnimasi);
+            el.classList.add(kelasBaru);
             currentAnimasi = kelasBaru; updateTampilanTombol('animasi', kelasBaru);
             
             let cssSingkat = "", penjelasanDetail = "";
             
             if(kelasBaru === 'animasi-panzoom') {
                 cssSingkat = `@keyframes panZoom {\n  0% { transform: scale(1); }\n  50% { transform: scale(1.1) translate(-2%,2%); }\n  100% { transform: scale(1); }\n}\n.${kelasBaru} { animation: panZoom 10s infinite alternate; }`;
-                penjelasanDetail = `/* --- BAGAIMANA CARA KERJA ANIMASI CSS? --- */\n/* 1. KITA BUAT SKENARIONYA (@keyframes) */\n@keyframes panZoom {\n  /* 0% adalah kondisi saat detik pertama animasi dimulai */\n  0% { \n    transform: scale(1) translate(0, 0); /* Ukuran asli (1 = 100%), posisi geser nol. */\n  }\n  /* 50% adalah kondisi di pertengahan waktu. */\n  50% { \n    /* transform: Mengubah bentuk fisik elemen.\n       - scale(1.1): Perbesar ukurannya menjadi 110%.\n       - translate(-2%, 2%): Geser elemen sedikit ke kiri bawah. */\n    transform: scale(1.1) translate(-2%, 2%); \n  }\n  /* 100% adalah kondisi animasi saat berakhir */\n  100% { \n    transform: scale(1) translate(0, 0); \n  }\n}\n\n/* 2. KITA TERAPKAN KE ELEMEN HTMLNYA */\n.${kelasBaru} {\n  /* animation memanggil skenario 'panZoom' yang kita buat di atas.\n     - 10s: Waktu tempuh 0% hingga 100% adalah 10 detik lambat.\n     - infinite: Ulangi animasi tanpa batas (looping).\n     - alternate: Setelah sampai 100%, gerakkan mundur ke 0% (bolak-balik).\n     - ease-in-out: Gerakannya diperhalus, lambat di awal dan di akhir. */\n  animation: panZoom 10s infinite alternate ease-in-out;\n}\n\n/* 3. TRIK INTERAKSI HOVER MOUSE */\n#artikel-gambar:hover {\n  /* ':hover' aktif jika kursor mouse menyentuh elemen ini.\n     'animation-play-state: paused' akan memberhentikan sementara (pause) skenario animasi yang sedang diputar, sehingga pengguna bisa melihat foto dengan jelas. */\n  animation-play-state: paused;\n}`;
+                penjelasanDetail = `/* --- BAGAIMANA CARA KERJA ANIMASI GAMBAR? --- */\n@keyframes panZoom {\n  0% { transform: scale(1) translate(0, 0); }\n  50% { \n    /* Membesar 10% dan bergeser sedikit ke sudut kiri bawah */\n    transform: scale(1.1) translate(-2%, 2%); \n  }\n  100% { transform: scale(1) translate(0, 0); }\n}\n\n.${kelasBaru} {\n  /* \n     - 10s: Waktu lambat 10 detik\n     - infinite: Diulang tanpa batas\n     - alternate: Gerak maju-mundur \n  */\n  animation: panZoom 10s infinite alternate ease-in-out;\n}\n\n#artikel-gambar:hover {\n  /* Menghentikan animasi saat cursor diarahkan (hover) ke foto */\n  animation-play-state: paused;\n}`;
             } else if (kelasBaru === 'animasi-mati') {
                 cssSingkat = `.${kelasBaru} { animation: none; }`;
-                penjelasanDetail = `.${kelasBaru} {\n  /* 'animation: none' mematikan seluruh gerakan animasi yang diatur oleh CSS pada elemen ini, mengembalikannya ke sifat benda mati (statis). */\n  animation: none;\n}`;
+                penjelasanDetail = `.${kelasBaru} {\n  animation: none;\n}`;
             } else {
                 cssSingkat = `@keyframes efekGerak { ... }\n.${kelasBaru} { animation: efekGerak 1.5s infinite; }`;
-                penjelasanDetail = `/* Prinsipnya sama dengan animasi lainnya. */\n@keyframes gerakanTerkait {\n  /* Menggunakan properti CSS 'transform' seperti:\n     - scale() untuk merubah ukuran benda berdenyut.\n     - rotate() untuk memutar gambar dalam hitungan derajat (deg).\n     - translateY() untuk menggeser gambar ke atas atau bawah secara spesifik. */\n}\n\n.${kelasBaru} {\n  /* Menerapkan animasi tersebut dengan durasi detik tertentu (contoh 1.5s atau 2s) dan mengulangnya (infinite). */\n  animation: namaGerakan 1.5s infinite ease-in-out;\n}\n\n/* Saat mouse disentuh (hover) */\n#artikel-gambar:hover {\n  animation-play-state: paused; /* Animasi berhenti */\n}`;
+                penjelasanDetail = `@keyframes gerakanTerkait {\n  /* Menggunakan properti CSS 'transform' seperti:\n     - scale() berdenyut.\n     - rotate() memutar derajat (deg).\n     - translateY() menggeser vertikal. */\n}\n\n.${kelasBaru} {\n  animation: namaGerakan 1.5s infinite ease-in-out;\n}\n\n#artikel-gambar:hover {\n  animation-play-state: paused;\n}`;
             }
             
             renderKode('kode-animasi', `<img id="artikel-gambar" class="${kelasBaru}">`, cssSingkat, penjelasanDetail);
         }
 
-        function animasiMasukAwal() {
-            const artikel = document.getElementById('artikel-kertas');
-            artikel.classList.remove('efek-masuk');
-            void artikel.offsetWidth; 
-            artikel.classList.add('efek-masuk');
-            
-            let penjelasanDetail = `/* --- EFEK MUNCULNYA HALAMAN PERTAMA KALI --- */\n@keyframes masukBawah {\n  from {\n    /* opacity: 0; artinya benda tembus pandang 100% (tidak terlihat mata). */\n    opacity: 0;\n    /* Posisi awal digeser ke bawah layar sejauh 40 pixel. */\n    transform: translateY(40px);\n  }\n  to {\n    /* opacity: 1; artinya benda sepenuhnya solid/jelas terlihat. */\n    opacity: 1;\n    /* Posisi dikembalikan normal ke titik semula (0 pixel). */\n    transform: translateY(0);\n  }\n}\n\n.efek-masuk {\n  /* 'forwards' adalah perintah kunci di sini.\n     Biasanya animasi CSS kalau sudah selesai akan mengembalikan elemen ke posisi asal (menghilang).\n     Dengan menambahkan 'forwards', elemen dipaksa bertahan di posisi terakhir animasi (kondisi 'to') secara permanen. */\n  animation: masukBawah 0.8s ease-out forwards;\n}`;
-            
-            renderKode('kode-transisi', `<article class="efek-masuk">\n  Isi Halaman\n</article>`, `@keyframes masukBawah {\n  from { opacity: 0; transform: translateY(40px); }\n  to { opacity: 1; transform: translateY(0); }\n}\n.efek-masuk {\n  animation: masukBawah 0.8s ease-out forwards;\n}`, penjelasanDetail);
-        }
-
-        function gantiSection() {
-            const wadah = document.getElementById('section-transisi');
-            const konten = document.getElementById('konten-section');
-            wadah.classList.remove('efek-masuk');
-            wadah.classList.add('efek-hilang');
-
-            let penjelasanDetail = `/* --- MENSIMULASIKAN PERGANTIAN HALAMAN --- */\n/* Langkah 1: Kita panggil efek hilang terlebih dahulu di CSS */\n@keyframes hilangAtas {\n  from { opacity: 1; transform: translateY(0); }\n  to {\n    /* Elemen perlahan menghilang (opacity 0) sembari naik ke atas sejauh 40 pixel (bernilai negatif). */\n    opacity: 0;\n    transform: translateY(-40px);\n  }\n}\n\n.efek-hilang {\n  animation: hilangAtas 0.6s ease-in forwards;\n}\n\n/* Langkah 2: Di belakang layar, kita gunakan JAVASCRIPT */\n/* \n   Program Javascript menggunakan perintah 'setTimeout' untuk menunggu selama 0.6 detik sampai proses animasi hilangnya selesai.\n   Setelah teksnya berhasil menghilang, Javascript secara kilat mengganti isi tulisannya (innerHTML).\n   Terakhir, elemen tersebut diubah lagi kelasnya menjadi '.efek-masuk' sehingga seolah-olah halaman baru muncul terbang ke atas.\n*/`;
-
-            renderKode('kode-transisi', `<div class="efek-hilang">\n  Section Lama\n</div>`, `.efek-hilang {\n  animation: hilangAtas 0.6s forwards;\n}`, penjelasanDetail);
-
-            setTimeout(() => {
-                if(sectionAktif === 1) {
-                    konten.innerHTML = `<h4 class="text-xl font-bold text-slate-700 mb-2 mt-4 border-l-4 border-blue-500 pl-3">Ragam Lomba Hari Kedua</h4><p>Selain pameran seni, kompetisi olahraga dan e-sports juga turut memeriahkan pekan ini. Pertandingan final basket akan diadakan di lapangan utama pada hari Rabu siang.</p>`;
-                    sectionAktif = 2;
-                } else {
-                    konten.innerHTML = `<p>Kegiatan ekstrakurikuler memegang peranan penting...</p><aside id="artikel-aside" class="${currentAside} bg-yellow-50 border-l-4 border-yellow-500 p-4 text-sm font-semibold text-yellow-800 shadow-sm rounded mt-4">💡 <strong>Tahukah Kamu?</strong> SMAN 1 Nusantara menang!</aside><p class="mt-4">Berbagai pameran telah disusun rapi...</p>`;
-                    sectionAktif = 1;
-                }
-                
-                wadah.classList.remove('efek-hilang');
-                void wadah.offsetWidth; 
-                wadah.classList.add('efek-masuk');
-                
-                setTimeout(() => {
-                    renderKode('kode-transisi', `<div class="efek-masuk">\n  Section Baru\n</div>`, `.efek-masuk {\n  animation: masukBawah 0.8s forwards;\n}`, penjelasanDetail);
-                }, 100);
-            }, 600);
-        }
-
         function aturGaleri(kelasBaru) {
-            document.getElementById('galeri-scroll').className = `flex gap-4 w-max ${kelasBaru}`;
+            const el = document.getElementById('galeri-scroll');
+            el.classList.remove(currentGaleri);
+            el.classList.add(kelasBaru);
             currentGaleri = kelasBaru; updateTampilanTombol('galeri', kelasBaru);
             
             let cssSingkat = "", penjelasanDetail = "";
             if(kelasBaru !== 'scroll-mati') {
                 cssSingkat = `.galeri-container { overflow: hidden; }\n.${kelasBaru} { animation: scrollKiri 20s linear infinite; }\n@keyframes scrollKiri { 100% { transform: translateX(-50%); } }`;
-                penjelasanDetail = `/* --- RAHASIA ANIMASI SLIDER BERJALAN MULUS (MARQUEE) --- */\n.galeri-container {\n  /* 'overflow: hidden' adalah pelindung utama.\n     Karena deretan gambar kita memanjang sangat jauh ke kanan, tanpa properti ini, halaman web akan bocor, meluber, dan memunculkan scroll-bar panjang di bawah browser.\n     Properti ini memotong apa pun yang keluar dari batas kotak utamanya. */\n  overflow: hidden;\n}\n\n@keyframes scrollKiri {\n  0% { transform: translateX(0); }\n  100% {\n    /* 'translateX' menggeser elemen secara horizontal (kiri-kanan).\n       Kenapa -50% (minus 50 persen)?\n       Rahasia: Di dalam HTML, deretan foto kita gandakan (DUPLIKAT) menjadi 2 kali lipat secara identik.\n       Ketika barisan ini bergeser persis di batas 50% (setengah perjalanan), foto pertama duplikat menempati persis posisi foto pertama asli. \n       Saat titik ini tercapai, animasi kembali ke 0%. Mata manusia tidak menyadari reset ini, sehingga galeri terasa berjalan tanpa akhir (infinite). */\n    transform: translateX(-50%);\n  }\n}\n\n.${kelasBaru} {\n  /* 'linear' sangat penting untuk slider.\n     Berbeda dengan 'ease-in-out' yang kecepatannya naik turun, 'linear' memaksa kecepatan dorongan konstan/sama rata dari awal hingga akhir putaran. */\n  animation: scrollKiri ${kelasBaru === 'scroll-lambat' ? '20s' : '8s'} linear infinite;\n}\n\n/* Trik hover: saat galeri disentuh cursor, putaran akan berhenti (paused) agar pengguna bisa melihat foto lebih leluasa. */\n#galeri-scroll:hover {\n  animation-play-state: paused;\n}`;
+                penjelasanDetail = `/* --- RAHASIA ANIMASI SLIDER BERJALAN (MARQUEE) --- */\n.galeri-container {\n  /* 'overflow: hidden' mencegah deretan gambar bocor memunculkan scroll-bar di bawah browser. */\n  overflow: hidden;\n}\n\n@keyframes scrollKiri {\n  0% { transform: translateX(0); }\n  100% {\n    /* Kenapa -50%? Rahasianya kita menduplikat foto secara persis di HTML.\n       Saat geser 50%, posisi terlihat sama seperti semula dan berulang tanpa henti (infinite loop) */\n    transform: translateX(-50%);\n  }\n}\n\n.${kelasBaru} {\n  /* 'linear' sangat penting untuk menjaga kecepatan dorongan tetap konstan/rata. */\n  animation: scrollKiri ${kelasBaru === 'scroll-lambat' ? '20s' : '8s'} linear infinite;\n}\n\n#galeri-scroll:hover {\n  animation-play-state: paused;\n}`;
             } else {
                 cssSingkat = `.${kelasBaru} { animation: none; }`;
-                penjelasanDetail = `/* Mematikan pergerakan galeri (animasi dinonaktifkan). */\n.${kelasBaru} {\n  animation: none;\n}`;
+                penjelasanDetail = `.${kelasBaru} {\n  animation: none;\n}`;
             }
             renderKode('kode-galeri', `<div class="galeri-container overflow-hidden">\n  <div id="galeri-scroll" class="${kelasBaru}">\n    <img src="foto.jpg">...\n  </div>\n</div>`, cssSingkat, penjelasanDetail);
         }
 
         function aturGrid(kelasBaru) {
-            document.getElementById('artikel-grid').className = `transition-all duration-500 ${kelasBaru}`;
+            const el = document.getElementById('artikel-grid');
+            el.classList.remove(currentGrid);
+            el.classList.add(kelasBaru);
             currentGrid = kelasBaru; updateTampilanTombol('grid', kelasBaru);
             
             let kolom = kelasBaru.split('-')[1];
             let cssSingkat = `.${kelasBaru} {\n  display: grid;\n  grid-template-columns: repeat(${kolom}, 1fr);\n  gap: 16px;\n}`;
-            let penjelasanDetail = `/* --- CSS GRID: TATA LETAK MASA DEPAN --- */\n.${kelasBaru} {\n  /* 'display: grid' adalah cara termudah dan modern untuk membuat susunan kotak-kotak selayaknya lantai keramik atau tabel Excel. */\n  display: grid;\n\n  /* 'grid-template-columns' adalah perintah untuk membelah ruangan.\n     'repeat(${kolom}, 1fr)' artinya:\n     Tolong bagi ruangan kosong ini menjadi ${kolom} kolom.\n     Masing-masing ukurannya '1fr' (Fraction / Pecahan).\n     \n     Sistem browser akan otomatis menghitung matematikanya. Jika layar besar, foto ikut besar. Jika layar kecil, foto mengecil (Otomatis Responsif) tanpa perlu menghitung persentase lebar secara manual! */\n  grid-template-columns: repeat(${kolom}, 1fr);\n\n  /* 'gap: 16px' ibarat semen jarak di antara keramik. \n     Ini secara instan memberikan jarak kosong (selokan) antar kolom dan antar baris sebesar 16 pixel. Jauh lebih mudah daripada memakai 'margin'. */\n  gap: 16px;\n}`;
+            let penjelasanDetail = `/* --- CSS GRID: TATA LETAK MASA DEPAN --- */\n.${kelasBaru} {\n  display: grid;\n\n  /* 'repeat(${kolom}, 1fr)' artinya: Bagi ruangan menjadi ${kolom} kolom dengan ukuran 1 pecahan (1fr) yang sama rata.\n     Browser akan otomatis menghitung ukurannya jika layar membesar atau mengecil! */\n  grid-template-columns: repeat(${kolom}, 1fr);\n\n  /* 'gap: 16px' secara instan memberikan jarak pemisah selokan sebesar 16 pixel antar baris & kolom. */\n  gap: 16px;\n}`;
             
-            renderKode('kode-grid', `<div class="${kelasBaru}">\n  <img src="karya1.jpg">\n  <img src="karya2.jpg">\n  <img src="karya3.jpg">\n</div>`, cssSingkat, penjelasanDetail);
+            renderKode('kode-grid', `<div class="${kelasBaru}">\n  <img src="karya1.jpg">\n  <img src="karya2.jpg">\n</div>`, cssSingkat, penjelasanDetail);
         }
 
         function aturSisipan(kelasBaru) {
-            document.getElementById('gambar-sisipan').className = `shadow-sm border-2 border-white ${kelasBaru}`;
+            const el = document.getElementById('gambar-sisipan');
+            el.classList.remove(currentSisipan);
+            el.classList.add(kelasBaru);
             currentSisipan = kelasBaru; updateTampilanTombol('sisipan', kelasBaru);
             
             let cssSingkat = "", penjelasanDetail = "";
             if(kelasBaru === 'sisipan-sembunyi') {
                 cssSingkat = `.${kelasBaru} { display: none; }`;
-                penjelasanDetail = `/* 'display: none' menghilangkan elemen beserta bentuk fisiknya secara total dari layar browser, seolah-olah kode HTML-nya tidak pernah ada. */\n.${kelasBaru} {\n  display: none;\n}`;
+                penjelasanDetail = `/* 'display: none' menghilangkan elemen secara total dari layar browser. */\n.${kelasBaru} {\n  display: none;\n}`;
             } else {
                 let arah = kelasBaru.split('-')[1];
                 cssSingkat = `.${kelasBaru} { float: ${arah}; margin: 5px; }`;
-                penjelasanDetail = `/* --- GAMBAR KECIL TERSISIP DI DALAM PARAGRAF --- */\n.${kelasBaru} {\n  /* Mirip pengaturan gambar utama di atas, kita menggunakan 'float: ${arah}'.\n     Karena gambar ini fisiknya diselipkan tepat di dalam tag <p> (Paragraf teks),\n     gambar akan terdorong ke sudut ${arah} dan tulisan di dalam paragraf akan otomatis melingkari/membungkus gambar tersebut layaknya sisipan foto di koran asli. */\n  float: ${arah};\n\n  /* Memberikan ruang bernapas antara gambar kecil ini dan teks paragraf di sekitarnya. */\n  margin: 5px 15px 5px 0;\n}`;
+                penjelasanDetail = `/* --- GAMBAR KECIL TERSISIP DI DALAM PARAGRAF --- */\n.${kelasBaru} {\n  /* Gambar ini diselipkan di dalam tag <p>. Dengan float: ${arah}, gambar terdorong ke sudut dan teks akan melingkarinya/membungkusnya. */\n  float: ${arah};\n  margin: 5px 15px 5px 0;\n}`;
             }
             renderKode('kode-sisipan', `<p class="clearfix">\n  <img class="${kelasBaru}">\n  Teks paragraf melingkar...\n</p>`, cssSingkat, penjelasanDetail);
         }
 
         window.onload = function() {
+            // Memberikan nilai awal pada komponen saat halaman dimuat
             aturJudul(currentJudul);
             aturGambar(currentGambar);
             aturTeks(currentTeks);
@@ -552,7 +713,9 @@
             aturGaleri(currentGaleri);
             aturGrid(currentGrid);
             aturSisipan(currentSisipan);
-            animasiMasukAwal();
+
+            // Memanggil animasi transisi paling akhir agar bereaksi sempurna di layar
+            aturTransisi(currentTransisi);
         };
     </script>
 </body>
