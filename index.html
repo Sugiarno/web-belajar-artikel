@@ -103,20 +103,32 @@
     </style>
 </head>
 
-<body class="bg-slate-100 h-screen flex flex-col md:flex-row relative overflow-hidden"> 
+<!-- ========================================================================= -->
+<!-- LAYOUT UTAMA (OVERALL PAGE LAYOUT): MENGGUNAKAN CSS GRID                  -->
+<!-- ========================================================================= -->
+<!-- 
+  Konsep Grid:
+  - Di HP (default): Dibagi menjadi 2 baris atas-bawah (grid-rows-2)
+  - Di Desktop (md:): Dibagi menjadi 3 kolom menyamping (grid-cols-3), 
+    di mana panel kiri mengambil 1 kolom, panel kanan mengambil 2 kolom. 
+-->
+<body class="bg-slate-100 h-screen grid grid-rows-2 md:grid-rows-1 grid-cols-1 md:grid-cols-3 relative overflow-hidden"> 
 
     <!-- ======================================================== -->
     <!-- PANEL KONTROL / SIDEBAR (Di Sebelah Kiri)                -->
+    <!-- Mengambil 1 kolom grid (md:col-span-1)                   -->
     <!-- ======================================================== -->
-    <aside class="w-full md:w-1/3 h-1/2 md:h-full bg-white shadow-xl p-6 overflow-y-auto border-r border-slate-200 z-10">
+    <aside class="md:col-span-1 bg-white shadow-xl p-6 overflow-y-auto border-r border-slate-200 z-10 h-full">
         <h2 class="text-2xl font-bold text-blue-700 mb-2">Pusat Kendali Layout</h2>
         <p class="text-slate-500 text-sm mb-6">Ubah tombol di bawah, lalu <strong class="text-blue-600">Klik Kotak Kodenya</strong> untuk membaca bedah detail penjelasan materinya.</p>
 
         <!-- KONTROL 1: Transisi Perpindahan Section -->
         <div class="mb-8 border-b border-slate-200 pb-6 bg-rose-50 p-4 rounded-xl shadow-sm border border-rose-100">
+            <!-- KOMPONEN: Flexbox untuk menyelaraskan Ikon dan Teks di satu baris (flex items-center) -->
             <h3 class="font-bold text-rose-800 mb-3 flex items-center"><span class="bg-rose-200 text-rose-800 px-2 py-1 rounded text-xs mr-2 shadow-sm">1</span> Transisi & Animasi Modern</h3>
             <p class="text-xs text-rose-600 mb-3 italic">Halaman kini menggunakan animasi masuk 'berantai' (staggered) per blok. Pilih gayanya:</p>
             
+            <!-- KOMPONEN: CSS Grid Kecil (Micro Layout) untuk tombol 2x2 -->
             <div class="grid grid-cols-2 gap-2 mb-4">
                 <button onclick="aturTransisi('fade')" class="btn-transisi bg-rose-500 text-white py-2 rounded shadow hover:bg-rose-600 transition text-sm font-semibold">Fade (Pudar)</button>
                 <button onclick="aturTransisi('slide')" class="btn-transisi bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm font-semibold">Slide Up</button>
@@ -124,6 +136,7 @@
                 <button onclick="aturTransisi('klip')" class="btn-transisi bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm font-semibold">Klipping</button>
             </div>
             
+            <!-- KOMPONEN PELENGKAP: Menggunakan Flexbox untuk deretan tombol menyamping (flex gap-2) -->
             <div class="flex gap-2 mb-3">
                 <button onclick="animasiMasukAwal()" class="flex-1 border-2 border-rose-500 text-rose-600 py-1.5 rounded hover:bg-rose-100 transition text-xs font-bold">↻ Muat Ulang Halaman</button>
                 <button onclick="gantiSection()" class="flex-1 bg-slate-800 text-white py-1.5 rounded shadow hover:bg-slate-900 transition text-xs font-bold">Ganti Paragraf ❯</button>
@@ -135,6 +148,7 @@
         <!-- KONTROL 2: Judul Artikel -->
         <div class="mb-8 border-b border-slate-200 pb-6">
             <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs mr-2">2</span> Posisi Judul</h3>
+            <!-- KOMPONEN PELENGKAP: Flexbox (flex) dengan flex-1 pada anaknya agar tombol membagi ruang rata -->
             <div class="flex gap-2 mb-3">
                 <button onclick="aturJudul('judul-kiri')" class="btn-judul flex-1 bg-blue-500 text-white py-2 rounded shadow hover:bg-blue-600 transition text-sm">Kiri</button>
                 <button onclick="aturJudul('judul-tengah')" class="btn-judul flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Tengah</button>
@@ -146,6 +160,7 @@
         <!-- KONTROL 3: Gambar Utama -->
         <div class="mb-8 border-b border-slate-200 pb-6">
             <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs mr-2">3</span> Posisi Gambar (Float)</h3>
+            <!-- KOMPONEN PELENGKAP: Flexbox Kolom (flex-col) untuk menyusun tombol dari atas ke bawah -->
             <div class="flex flex-col gap-2 mb-3">
                 <button onclick="aturGambar('gambar-kiri')" class="btn-gambar bg-green-500 text-white py-2 rounded shadow hover:bg-green-600 transition text-sm">Di Kiri Teks (Float Left)</button>
                 <button onclick="aturGambar('gambar-kanan')" class="btn-gambar bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Di Kanan Teks (Float Right)</button>
@@ -165,7 +180,7 @@
             <div class="bg-slate-900 rounded p-3 shadow-inner"><pre id="kode-teks" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre></div>
         </div>
 
-        <!-- KONTROL 5: Aside (Kotak Info - Mode Dropdown) -->
+        <!-- KONTROL 5: Aside (Kotak Info) -->
         <div class="mb-8 border-b border-slate-200 pb-6">
             <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs mr-2">5</span> Kotak Info (Dropdown)</h3>
             <div class="flex gap-2 mb-3">
@@ -190,6 +205,7 @@
         <!-- KONTROL 7: Efek Animasi Gambar -->
         <div class="mb-8 border-b border-slate-200 pb-6">
             <h3 class="font-semibold text-slate-700 mb-3 flex items-center"><span class="bg-cyan-100 text-cyan-700 px-2 py-1 rounded text-xs mr-2">7</span> Animasi Gambar</h3>
+            <!-- KOMPONEN PELENGKAP: Flexbox dengan wrap (flex-wrap) agar tombol rapi membungkus jika layar sempit -->
             <div class="flex gap-2 flex-wrap mb-2">
                 <button onclick="aturAnimasi('animasi-mati')" class="btn-animasi flex-1 bg-cyan-500 text-white py-2 rounded shadow hover:bg-cyan-600 transition text-sm">Diam</button>
                 <button onclick="aturAnimasi('animasi-denyut')" class="btn-animasi flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Denyut</button>
@@ -238,12 +254,18 @@
 
     <!-- ======================================================== -->
     <!-- AREA PREVIEW ARTIKEL (Di Sebelah Kanan)                  -->
+    <!-- Mengambil 2 kolom dari total 3 kolom Grid (md:col-span-2)-->
+    <!-- KOMPONEN: Didalamnya menggunakan Flexbox Column (flex-col) untuk  -->
+    <!-- menyusun Toolbar (atas) dan Artikel (bawah) secara rapi. -->
     <!-- ======================================================== -->
-    <main class="w-full md:w-2/3 h-1/2 md:h-full flex flex-col bg-slate-200/50">
+    <main class="md:col-span-2 h-full flex flex-col bg-slate-200/50">
         
         <!-- TOOLBAR MODE LAYAR (VIEWPORT) -->
+        <!-- KOMPONEN: Menggunakan Flexbox untuk menjaga label text dan grup tombol di tengah sejajar -->
         <div class="bg-slate-800 p-3 flex justify-center items-center gap-4 shadow-md z-20 shrink-0">
             <span class="text-slate-300 text-sm font-semibold hidden sm:block">🖥️ Mode Tampilan:</span>
+            
+            <!-- KOMPONEN: Flexbox membungkus ketiga ikon tombol device di dalam toolbar -->
             <div class="flex gap-1 bg-slate-900 rounded-lg p-1">
                 <button onclick="aturLayar('desktop')" class="btn-layar px-4 py-1.5 rounded-md text-sm font-medium transition-all bg-slate-700 text-white shadow-sm flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> Desktop
@@ -258,9 +280,9 @@
         </div>
 
         <!-- SCROLLABLE ARTICLE AREA -->
+        <!-- KOMPONEN: Menggunakan Flexbox untuk menjaga agar kotak artikel kertas berada tegak lurus di tengah (justify-center) -->
         <div class="flex-1 overflow-y-auto p-4 md:p-8 w-full flex justify-center items-start">
             
-            <!-- Perhatikan hilangnya kelas masuk-fade dari kertas utamanya. Animasi kini diterapkan ke masing-masing blok (stagger-item) di bawah ini -->
             <article id="artikel-kertas" class="bg-white p-6 md:p-12 w-full max-w-4xl shadow-2xl rounded-lg border border-slate-200 artikel-kontainer clearfix transition-all duration-500 ease-in-out mx-auto overflow-hidden relative">
                 
                 <!-- BLOK 1 -->
@@ -281,6 +303,7 @@
 
                             <!-- PERBAIKAN: Aside dengan fungsionalitas Dropdown Akordeon (Bisa diklik) -->
                             <aside id="artikel-aside" class="aside-kanan bg-yellow-50 border-l-4 border-yellow-500 p-4 text-sm font-semibold text-yellow-800 shadow-sm rounded transition-all duration-300">
+                                <!-- KOMPONEN: Menggunakan Flexbox (flex justify-between) pada header dropdown agar judul di kiri dan icon di kanan -->
                                 <div class="cursor-pointer flex justify-between items-center" onclick="toggleAside()">
                                     <span class="flex items-center gap-1">💡 <strong class="truncate">Tahukah Kamu?</strong></span>
                                     <span id="aside-icon" class="transition-transform duration-300 transform rotate-0 text-yellow-600 text-xs ml-2">▼</span>
@@ -303,6 +326,7 @@
                 <!-- BLOK 4 -->
                 <div class="stagger-item mt-8 pt-6 border-t border-slate-200">
                     <h4 class="text-lg font-bold text-slate-700 mb-4">Sorotan Karya Terbaik</h4>
+                    <!-- INTI DARI GRID: Ini adalah satu-satunya tata letak Grid murni di dalam artikel -->
                     <div id="artikel-grid" class="grid-3-kolom transition-all duration-500">
                         <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 1">
                         <img src="https://images.unsplash.com/photo-1560421683-6856ea585c78?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 2">
@@ -314,6 +338,7 @@
                 <div class="stagger-item mt-8 pt-6 border-t border-slate-200">
                     <h4 class="text-lg font-bold text-slate-700 mb-4">Galeri Dokumentasi</h4>
                     <div class="w-full overflow-hidden relative rounded-lg bg-slate-50 border border-slate-200 py-4">
+                        <!-- KOMPONEN: Menggunakan Flexbox pada kontainer gambar agar mereka berjalan berjejer ke samping -->
                         <div id="galeri-scroll" class="flex gap-4 w-max scroll-lambat">
                             <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
                             <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
@@ -341,6 +366,7 @@
     <!-- MODAL (POPUP) PENJELASAN KODE DETAIL                     -->
     <!-- ======================================================== -->
     <div id="modal-detail" class="fixed inset-0 bg-slate-900/80 hidden z-50 flex items-center justify-center p-4 md:p-10 opacity-0 transition-opacity duration-300">
+        <!-- KOMPONEN: Flexbox untuk menyusun tajuk, badan kode, dan tombol footer berurutan secara vertikal (flex-col) -->
         <div class="bg-[#1e1e1e] rounded-xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-slate-600 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center p-4 border-b border-slate-700 bg-slate-800 rounded-t-xl">
                 <h3 class="text-white font-bold md:text-lg flex items-center">
