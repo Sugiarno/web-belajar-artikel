@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Layout Artikel Sekolah</title>
+    <!-- Menggunakan Tailwind CSS untuk mempercantik tampilan alat belajarnya -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CSS MURNI: Ini adalah kode CSS yang akan kita ajarkan ke murid -->
+    <style>
+        /* Pengaturan Posisi Judul */
+        .judul-kiri { text-align: left; }
+        .judul-tengah { text-align: center; }
+        .judul-kanan { text-align: right; }
+
+        /* Pengaturan Posisi Gambar (Menggunakan Float & Block) */
+        .gambar-kiri { 
+            float: left; 
+            margin-right: 20px; 
+            margin-bottom: 15px; 
+            display: inline-block;
+        }
+        .gambar-kanan { 
+            float: right; 
+            margin-left: 20px; 
+            margin-bottom: 15px; 
+            display: inline-block;
+        }
+        .gambar-tengah { 
+            display: block; 
+            margin: 0 auto 20px auto; 
+            float: none; 
+        }
+
+        /* Pengaturan Perataan Teks Paragraf */
+        .teks-kiri { text-align: left; }
+        .teks-tengah { text-align: center; }
+        .teks-penuh { text-align: justify; }
+
+        /* Pengaturan Kotak Info (Aside) */
+        .aside-kiri { float: left; margin-right: 20px; margin-bottom: 15px; width: 35%; max-width: 250px; }
+        .aside-kanan { float: right; margin-left: 20px; margin-bottom: 15px; width: 35%; max-width: 250px; }
+        .aside-blok { float: none; display: block; margin: 20px 0; width: 100%; max-width: none; }
+
+        /* Pengaturan Catatan Kaki (Footnote) */
+        .catatan-kiri { text-align: left; }
+        .catatan-tengah { text-align: center; }
+        .catatan-kanan { text-align: right; }
+
+        /* Pengaturan Animasi Dinamis (@keyframes) */
+        @keyframes denyut {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes goyang {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        @keyframes pantul {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Animasi Modern Gambar (Pan & Zoom ala Slide Show) */
+        @keyframes panZoom {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(-2%, 2%); }
+            100% { transform: scale(1) translate(0, 0); }
+        }
+
+        /* Animasi Masuk dan Keluar (Transisi Section) */
+        @keyframes masukBawah {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes hilangAtas {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-40px); }
+        }
+
+        /* Animasi Galeri (Marquee dari Kanan ke Kiri) */
+        @keyframes scrollKiri {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Menggeser persis 50% karena konten digandakan */
+        }
+
+        .animasi-denyut { animation: denyut 2s infinite ease-in-out; }
+        .animasi-goyang { animation: goyang 1.5s infinite ease-in-out; }
+        .animasi-pantul { animation: pantul 1.5s infinite ease-in-out; }
+        .animasi-panzoom { animation: panZoom 10s infinite alternate ease-in-out; }
+        .animasi-mati { animation: none; }
+
+        .efek-masuk { animation: masukBawah 0.8s ease-out forwards; }
+        .efek-hilang { animation: hilangAtas 0.6s ease-in forwards; }
+
+        /* Pengaturan Grid Multi-Gambar */
+        .grid-3-kolom { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .grid-2-kolom { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .grid-1-kolom { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+        /* Pengaturan Gambar Sisipan (Inline Float) */
+        .sisipan-kiri { float: left; margin: 5px 15px 5px 0; width: 140px; height: 100px; object-fit: cover; border-radius: 8px; }
+        .sisipan-kanan { float: right; margin: 5px 0 5px 15px; width: 140px; height: 100px; object-fit: cover; border-radius: 8px; }
+        .sisipan-sembunyi { display: none; }
+
+        /* Kelas untuk kecepatan Galeri Marquee */
+        .scroll-mati { animation: none !important; }
+        .scroll-lambat { animation: scrollKiri 20s linear infinite; }
+        .scroll-cepat { animation: scrollKiri 8s linear infinite; }
+
+        /* Fitur Gambar Berhenti saat Kursor di atasnya (Hover) */
+        #artikel-gambar:hover {
+            animation-play-state: paused;
+            cursor: pointer;
+            filter: brightness(0.85); /* Efek visual tambahan saat disentuh */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Estetika tambahan untuk artikel */
+        .artikel-kontainer {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Membersihkan float agar layout tidak berantakan setelah gambar */
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        /* Animasi transisi halus saat posisi berubah */
+        #artikel-judul, #artikel-gambar, #artikel-teks, #artikel-aside, #artikel-catatan {
+            transition: all 0.4s ease-in-out;
+        }
+
+        /* Hover Pause untuk Galeri */
+        #galeri-scroll:hover {
+            animation-play-state: paused;
+            cursor: ew-resize; /* Kursor geser kiri-kanan */
+        }
+        
+        /* Agar bagian transisi section terlihat natural */
+        #section-transisi {
+            position: relative;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col md:flex-row">
+
+    <!-- PANEL KONTROL (Kiri) -->
+    <aside class="w-full md:w-1/3 bg-white shadow-xl p-6 overflow-y-auto border-r border-slate-200 z-10">
+        <h2 class="text-2xl font-bold text-blue-700 mb-2">Pusat Kendali Layout</h2>
+        <p class="text-slate-500 text-sm mb-6">Klik tombol untuk mengubah posisi dan perhatikan perubahan kodenya di bawah masing-masing fitur.</p>
+
+        <!-- 1. Kontrol Judul -->
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs mr-2">1</span> 
+                Posisi Judul (text-align)
+            </h3>
+            <div class="flex gap-2 mb-3">
+                <button onclick="aturJudul('judul-kiri')" class="btn-judul flex-1 bg-blue-500 text-white py-2 rounded shadow hover:bg-blue-600 transition text-sm">Kiri</button>
+                <button onclick="aturJudul('judul-tengah')" class="btn-judul flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Tengah</button>
+                <button onclick="aturJudul('judul-kanan')" class="btn-judul flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Kanan</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-judul" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+
+        <!-- 2. Kontrol Gambar Utama -->
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs mr-2">2</span> 
+                Posisi Gambar (float / margin)
+            </h3>
+            <div class="flex flex-col gap-2 mb-3">
+                <button onclick="aturGambar('gambar-kiri')" class="btn-gambar bg-green-500 text-white py-2 rounded shadow hover:bg-green-600 transition text-sm">Di Kiri Teks (Float Left)</button>
+                <button onclick="aturGambar('gambar-kanan')" class="btn-gambar bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Di Kanan Teks (Float Right)</button>
+                <button onclick="aturGambar('gambar-tengah')" class="btn-gambar bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Di Tengah Atas (Block Center)</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-gambar" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+
+        <!-- 3. Kontrol Teks Paragraf -->
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs mr-2">3</span> 
+                Perataan Teks (text-align)
+            </h3>
+            <div class="flex gap-2 mb-3">
+                <button onclick="aturTeks('teks-kiri')" class="btn-teks flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Kiri</button>
+                <button onclick="aturTeks('teks-penuh')" class="btn-teks flex-1 bg-purple-500 text-white py-2 rounded shadow hover:bg-purple-600 transition text-sm">Penuh</button>
+                <button onclick="aturTeks('teks-tengah')" class="btn-teks flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Tengah</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-teks" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+
+        <!-- 4. Kontrol Aside -->
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs mr-2">4</span> 
+                Posisi Kotak Info (float)
+            </h3>
+            <div class="flex gap-2 mb-3">
+                <button onclick="aturAside('aside-kiri')" class="btn-aside flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Kiri</button>
+                <button onclick="aturAside('aside-blok')" class="btn-aside flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Penuh</button>
+                <button onclick="aturAside('aside-kanan')" class="btn-aside flex-1 bg-yellow-500 text-white py-2 rounded shadow hover:bg-yellow-600 transition text-sm">Kanan</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-aside" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+
+        <!-- 5. Kontrol Catatan Kaki -->
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs mr-2">5</span> 
+                Catatan Kaki (text-align)
+            </h3>
+            <div class="flex gap-2 mb-3">
+                <button onclick="aturCatatan('catatan-kiri')" class="btn-catatan flex-1 bg-gray-500 text-white py-2 rounded shadow hover:bg-gray-600 transition text-sm">Kiri</button>
+                <button onclick="aturCatatan('catatan-tengah')" class="btn-catatan flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Tengah</button>
+                <button onclick="aturCatatan('catatan-kanan')" class="btn-catatan flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Kanan</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-catatan" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+
+        <!-- 6. Kontrol Animasi -->
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-cyan-100 text-cyan-700 px-2 py-1 rounded text-xs mr-2">6</span> 
+                Animasi Gambar (@keyframes)
+            </h3>
+            <div class="flex gap-2 flex-wrap mb-2">
+                <button onclick="aturAnimasi('animasi-mati')" class="btn-animasi flex-1 bg-cyan-500 text-white py-2 rounded shadow hover:bg-cyan-600 transition text-sm">Diam</button>
+                <button onclick="aturAnimasi('animasi-denyut')" class="btn-animasi flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Denyut</button>
+                <button onclick="aturAnimasi('animasi-goyang')" class="btn-animasi flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Goyang</button>
+            </div>
+            <div class="flex gap-2 flex-wrap mb-3">
+                <button onclick="aturAnimasi('animasi-pantul')" class="btn-animasi flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Pantul</button>
+                <button onclick="aturAnimasi('animasi-panzoom')" class="btn-animasi flex-[2] bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm font-semibold">Pan-Zoom</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-animasi" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+
+        <!-- 7. Kontrol Transisi -->
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-rose-100 text-rose-700 px-2 py-1 rounded text-xs mr-2">7</span> 
+                Transisi Halaman
+            </h3>
+            <div class="flex flex-col gap-2 mb-3">
+                <button onclick="animasiMasukAwal()" class="bg-rose-500 text-white py-2 rounded shadow hover:bg-rose-600 transition text-sm">Mainkan Animasi Masuk</button>
+                <button onclick="gantiSection()" class="bg-slate-800 text-white py-2 rounded shadow hover:bg-slate-900 transition text-sm">Ganti Section (Keluar & Masuk)</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-transisi" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+
+        <!-- 8. Kontrol Galeri Foto -->
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded text-xs mr-2">8</span> 
+                Animasi Galeri Marquee
+            </h3>
+            <div class="flex gap-2 mb-3">
+                <button onclick="aturGaleri('scroll-mati')" class="btn-galeri flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Diam</button>
+                <button onclick="aturGaleri('scroll-lambat')" class="btn-galeri flex-1 bg-teal-500 text-white py-2 rounded shadow hover:bg-teal-600 transition text-sm">Lambat</button>
+                <button onclick="aturGaleri('scroll-cepat')" class="btn-galeri flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Cepat</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-galeri" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+
+        <!-- 9. Kontrol Grid Multi-Gambar -->
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs mr-2">9</span> 
+                Susunan Grid (CSS Grid)
+            </h3>
+            <div class="flex gap-2 mb-3">
+                <button onclick="aturGrid('grid-3-kolom')" class="btn-grid flex-1 bg-indigo-500 text-white py-2 rounded shadow hover:bg-indigo-600 transition text-sm">3 Kolom</button>
+                <button onclick="aturGrid('grid-2-kolom')" class="btn-grid flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">2 Kolom</button>
+                <button onclick="aturGrid('grid-1-kolom')" class="btn-grid flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">1 Kolom</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-grid" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+
+        <!-- 10. Kontrol Gambar Sisipan Paragraf -->
+        <div class="mb-4">
+            <h3 class="font-semibold text-slate-700 mb-3 flex items-center">
+                <span class="bg-fuchsia-100 text-fuchsia-700 px-2 py-1 rounded text-xs mr-2">10</span> 
+                Gambar Sisipan Paragraf
+            </h3>
+            <div class="flex gap-2 mb-3">
+                <button onclick="aturSisipan('sisipan-kiri')" class="btn-sisipan flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Kiri</button>
+                <button onclick="aturSisipan('sisipan-sembunyi')" class="btn-sisipan flex-1 bg-slate-200 text-slate-700 py-2 rounded shadow hover:bg-slate-300 transition text-sm">Sembunyi</button>
+                <button onclick="aturSisipan('sisipan-kanan')" class="btn-sisipan flex-1 bg-fuchsia-500 text-white py-2 rounded shadow hover:bg-fuchsia-600 transition text-sm">Kanan</button>
+            </div>
+            <div class="bg-slate-900 rounded p-3 shadow-inner">
+                <pre id="kode-sisipan" class="text-xs font-mono whitespace-pre-wrap break-words leading-relaxed"></pre>
+            </div>
+        </div>
+    </aside>
+
+    <!-- AREA PREVIEW ARTIKEL (Kanan) -->
+    <main class="w-full md:w-2/3 p-4 md:p-8 flex justify-center items-start overflow-y-auto">
+        
+        <!-- Kertas Artikel -->
+        <article id="artikel-kertas" class="bg-white p-8 md:p-12 w-full max-w-4xl shadow-2xl rounded-lg border border-slate-200 artikel-kontainer clearfix efek-masuk">
+            
+            <!-- Elemen Judul -->
+            <h1 id="artikel-judul" class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-6 judul-kiri border-b-2 border-slate-100 pb-4">
+                Pekan Kreativitas Siswa SMAN 1 Nusantara 2026
+            </h1>
+
+            <!-- Elemen Gambar -->
+            <img id="artikel-gambar" 
+                 src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400&auto=format&fit=crop" 
+                 alt="Siswa sedang belajar" 
+                 class="w-full md:w-1/2 max-w-sm rounded-xl shadow-md gambar-kiri animasi-panzoom border-4 border-white">
+
+            <!-- Elemen Teks/Paragraf -->
+            <div id="artikel-teks" class="teks-penuh text-slate-600 space-y-4">
+                
+                <div id="section-transisi" class="efek-masuk">
+                    <div id="konten-section">
+                        <p>
+                            Kegiatan ekstrakurikuler dan kreativitas siswa memegang peranan yang sangat penting dalam pembentukan karakter. Pada minggu ini, sekolah kita menyelenggarakan Pekan Kreativitas Tahunan yang menampilkan berbagai karya seni, inovasi teknologi, dan penampilan budaya dari seluruh perwakilan kelas. Acara ini tidak hanya menjadi ajang unjuk bakat, tetapi juga melatih rasa percaya diri dan kerja sama tim antar siswa.
+                        </p>
+
+                        <!-- Elemen Aside (Kotak Info Tambahan) -->
+                        <aside id="artikel-aside" class="aside-kanan bg-yellow-50 border-l-4 border-yellow-500 p-4 text-sm font-semibold text-yellow-800 shadow-sm rounded">
+                            💡 <strong>Tahukah Kamu?</strong> SMAN 1 Nusantara telah memenangkan penghargaan sekolah terkreatif tingkat nasional selama 3 tahun berturut-turut!
+                        </aside>
+
+                        <p>
+                            Berbagai pameran telah disusun rapi di aula utama sekolah. Mulai dari lukisan dari ekstrakurikuler seni rupa, robotika sederhana karya klub sains, hingga mading tiga dimensi yang memukau. Kepala sekolah menyampaikan apresiasi yang sangat besar atas antusiasme yang ditunjukkan oleh para peserta didik tahun ini. Diharapkan kegiatan seperti ini dapat terus menumbuhkan semangat belajar yang tidak terbatas hanya pada buku pelajaran di dalam kelas.
+                        </p>
+                    </div>
+                </div>
+
+                <p class="clearfix">
+                    <img id="gambar-sisipan" src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=200&auto=format&fit=crop" class="sisipan-kanan shadow-sm border-2 border-white" alt="Ilustrasi kecil">
+                    Mari kita dukung terus karya teman-teman kita! Jangan lupa untuk mengunjungi stan pameran pada jam istirahat dan berikan suara kalian untuk karya terfavorit. Belajar tidak melulu soal teori, melainkan bagaimana kita mengaplikasikan ilmu tersebut menjadi sebuah karya yang bermanfaat bagi lingkungan sekitar. Kehadiran kalian akan menjadi penyemangat bagi teman-teman yang telah berusaha keras menampilkan karya terbaik mereka di pekan ini.
+                </p>
+            </div>
+
+            <!-- Grid Multi-Gambar (Karya Terbaik) -->
+            <div class="mt-8 pt-6 border-t border-slate-200">
+                <h4 class="text-lg font-bold text-slate-700 mb-4">Sorotan Karya Terbaik</h4>
+                <div id="artikel-grid" class="grid-3-kolom transition-all duration-500">
+                    <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 1">
+                    <img src="https://images.unsplash.com/photo-1560421683-6856ea585c78?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 2">
+                    <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=300&auto=format&fit=crop" class="w-full h-32 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform cursor-pointer border-2 border-slate-100" alt="Karya Seni 3">
+                </div>
+            </div>
+
+            <!-- Galeri Dokumentasi Foto -->
+            <div class="mt-8 pt-6 border-t border-slate-200">
+                <h4 class="text-lg font-bold text-slate-700 mb-4">Galeri Dokumentasi</h4>
+                <!-- Container dengan overflow-hidden agar gambar yang keluar batas tidak membuat scroll bar -->
+                <div class="w-full overflow-hidden relative rounded-lg bg-slate-50 border border-slate-200 py-4">
+                    <!-- Elemen yang isinya 2x lipat dan diberi animasi -->
+                    <div id="galeri-scroll" class="flex gap-4 w-max scroll-lambat">
+                        <!-- SET FOTO 1 -->
+                        <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                        <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                        
+                        <!-- SET FOTO 2 (DUPLIKAT) - Rahasia infinite scroll yang mulus -->
+                        <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                        <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=250&auto=format&fit=crop" class="h-40 w-60 object-cover rounded-lg shadow-md border-2 border-white">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Elemen Catatan Kaki (Footnote) -->
+            <div class="mt-8 pt-4 border-t border-slate-200">
+                <p id="artikel-catatan" class="catatan-kiri text-xs text-slate-500 italic">
+                    * Artikel ini disumbangkan oleh Tim Jurnalistik Sekolah. Dokumentasi foto oleh Ekskul Fotografi.
+                </p>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- KODE JAVASCRIPT: Mengatur logika klik tombol dan perubahan CSS -->
+    <script>
+        // Variabel untuk menyimpan status kelas saat ini
+        let currentJudul = 'judul-kiri';
+        let currentGambar = 'gambar-kiri';
+        let currentTeks = 'teks-penuh';
+        let currentAside = 'aside-kanan';
+        let currentCatatan = 'catatan-kiri';
+        let currentAnimasi = 'animasi-panzoom'; 
+        let currentGaleri = 'scroll-lambat'; 
+        let currentGrid = 'grid-3-kolom';
+        let currentSisipan = 'sisipan-kanan';
+        
+        let sectionAktif = 1;
+
+        // Fungsi Bantuan: Merender HTML dan CSS ke dalam kotak kode spesifik dengan warna
+        function renderKode(elementId, htmlStr, cssStr) {
+            const pre = document.getElementById(elementId);
+            if (pre) {
+                // Menghindari tag HTML tereksekusi di dalam elemen <pre>
+                const htmlAman = htmlStr.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                pre.innerHTML = `<span class="text-blue-300">&lt;!-- HTML --&gt;\n${htmlAman}</span>\n\n<span class="text-green-400">/* CSS */\n${cssStr}</span>`;
+            }
+        }
+
+        // Fungsi untuk memperbarui tampilan tombol agar terlihat mana yang aktif
+        function updateTampilanTombol(tipe, kelasAktif) {
+            const buttons = document.querySelectorAll(`.btn-${tipe}`);
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-yellow-500', 'bg-gray-500', 'bg-cyan-500', 'bg-teal-500', 'bg-indigo-500', 'bg-fuchsia-500', 'text-white');
+                btn.classList.add('bg-slate-200', 'text-slate-700');
+                
+                if (btn.getAttribute('onclick').includes(kelasAktif)) {
+                    btn.classList.remove('bg-slate-200', 'text-slate-700');
+                    if(tipe === 'judul') btn.classList.add('bg-blue-500', 'text-white');
+                    if(tipe === 'gambar') btn.classList.add('bg-green-500', 'text-white');
+                    if(tipe === 'teks') btn.classList.add('bg-purple-500', 'text-white');
+                    if(tipe === 'aside') btn.classList.add('bg-yellow-500', 'text-white');
+                    if(tipe === 'catatan') btn.classList.add('bg-gray-500', 'text-white');
+                    if(tipe === 'animasi') btn.classList.add('bg-cyan-500', 'text-white');
+                    if(tipe === 'galeri') btn.classList.add('bg-teal-500', 'text-white');
+                    if(tipe === 'grid') btn.classList.add('bg-indigo-500', 'text-white');
+                    if(tipe === 'sisipan') btn.classList.add('bg-fuchsia-500', 'text-white');
+                }
+            });
+        }
+
+        // ==========================================
+        // FUNGSI PENGATURAN & UPDATE KODE PER BAGIAN
+        // ==========================================
+
+        function aturJudul(kelasBaru) {
+            document.getElementById('artikel-judul').className = `text-3xl md:text-4xl font-extrabold text-slate-800 mb-6 border-b-2 border-slate-100 pb-4 ${kelasBaru}`;
+            currentJudul = kelasBaru;
+            updateTampilanTombol('judul', kelasBaru);
+            
+            let css = kelasBaru === 'judul-kiri' ? `.${kelasBaru} {\n  text-align: left;\n}` :
+                      kelasBaru === 'judul-tengah' ? `.${kelasBaru} {\n  text-align: center;\n}` :
+                      `.${kelasBaru} {\n  text-align: right;\n}`;
+            renderKode('kode-judul', `<h1 class="${kelasBaru}">Pekan Kreativitas...</h1>`, css);
+        }
+
+        function aturGambar(kelasBaru) {
+            document.getElementById('artikel-gambar').className = `w-full md:w-1/2 max-w-sm rounded-xl shadow-md border-4 border-white ${currentAnimasi} ${kelasBaru}`;
+            currentGambar = kelasBaru;
+            updateTampilanTombol('gambar', kelasBaru);
+            
+            let css = kelasBaru === 'gambar-kiri' ? `.${kelasBaru} {\n  float: left;\n  margin-right: 20px;\n}` :
+                      kelasBaru === 'gambar-kanan' ? `.${kelasBaru} {\n  float: right;\n  margin-left: 20px;\n}` :
+                      `.${kelasBaru} {\n  display: block;\n  margin: 0 auto;\n}`;
+            renderKode('kode-gambar', `<img src="foto.jpg" class="${kelasBaru}">`, css);
+        }
+
+        function aturTeks(kelasBaru) {
+            document.getElementById('artikel-teks').className = `text-slate-600 space-y-4 ${kelasBaru}`;
+            currentTeks = kelasBaru;
+            updateTampilanTombol('teks', kelasBaru);
+            
+            let css = kelasBaru === 'teks-kiri' ? `.${kelasBaru} {\n  text-align: left;\n}` :
+                      kelasBaru === 'teks-penuh' ? `.${kelasBaru} {\n  text-align: justify;\n}` :
+                      `.${kelasBaru} {\n  text-align: center;\n}`;
+            renderKode('kode-teks', `<div class="${kelasBaru}">\n  <p>Paragraf teks di sini...</p>\n</div>`, css);
+        }
+
+        function aturAside(kelasBaru) {
+            document.getElementById('artikel-aside').className = `bg-yellow-50 border-l-4 border-yellow-500 p-4 text-sm font-semibold text-yellow-800 shadow-sm rounded mt-4 ${kelasBaru}`;
+            currentAside = kelasBaru;
+            updateTampilanTombol('aside', kelasBaru);
+            
+            let css = kelasBaru === 'aside-kiri' ? `.${kelasBaru} {\n  float: left;\n  width: 35%;\n}` :
+                      kelasBaru === 'aside-kanan' ? `.${kelasBaru} {\n  float: right;\n  width: 35%;\n}` :
+                      `.${kelasBaru} {\n  display: block;\n  width: 100%;\n}`;
+            renderKode('kode-aside', `<aside class="${kelasBaru}">\n  💡 Tahukah Kamu? SMAN 1...\n</aside>`, css);
+        }
+
+        function aturCatatan(kelasBaru) {
+            document.getElementById('artikel-catatan').className = `text-xs text-slate-500 italic ${kelasBaru}`;
+            currentCatatan = kelasBaru;
+            updateTampilanTombol('catatan', kelasBaru);
+            
+            let css = kelasBaru === 'catatan-kiri' ? `.${kelasBaru} {\n  text-align: left;\n}` :
+                      kelasBaru === 'catatan-tengah' ? `.${kelasBaru} {\n  text-align: center;\n}` :
+                      `.${kelasBaru} {\n  text-align: right;\n}`;
+            renderKode('kode-catatan', `<p class="${kelasBaru}">\n  * Artikel ini disumbangkan...\n</p>`, css);
+        }
+
+        function aturAnimasi(kelasBaru) {
+            document.getElementById('artikel-gambar').className = `w-full md:w-1/2 max-w-sm rounded-xl shadow-md border-4 border-white ${currentGambar} ${kelasBaru}`;
+            currentAnimasi = kelasBaru;
+            updateTampilanTombol('animasi', kelasBaru);
+            
+            let css = "";
+            if(kelasBaru === 'animasi-denyut') css = `@keyframes denyut {\n  0%, 100% { transform: scale(1); }\n  50% { transform: scale(1.05); }\n}\n.${kelasBaru} {\n  animation: denyut 2s infinite;\n}`;
+            else if(kelasBaru === 'animasi-goyang') css = `@keyframes goyang {\n  0%, 100% { transform: rotate(0deg); }\n  25% { transform: rotate(-5deg); }\n}\n.${kelasBaru} {\n  animation: goyang 1.5s infinite;\n}`;
+            else if(kelasBaru === 'animasi-pantul') css = `@keyframes pantul {\n  0%, 100% { transform: translateY(0); }\n  50% { transform: translateY(-15px); }\n}\n.${kelasBaru} {\n  animation: pantul 1.5s infinite;\n}`;
+            else if(kelasBaru === 'animasi-panzoom') css = `@keyframes panZoom {\n  0% { transform: scale(1) translate(0,0); }\n  50% { transform: scale(1.1) translate(-2%,2%); }\n}\n.${kelasBaru} {\n  animation: panZoom 10s infinite;\n}`;
+            else css = `.${kelasBaru} {\n  animation: none;\n}`;
+            
+            // Tambahkan CSS Hover
+            css += `\n\nimg:hover {\n  animation-play-state: paused;\n}`;
+            renderKode('kode-animasi', `<img class="${kelasBaru}">`, css);
+        }
+
+        function animasiMasukAwal() {
+            const artikel = document.getElementById('artikel-kertas');
+            artikel.classList.remove('efek-masuk');
+            void artikel.offsetWidth; // Reflow
+            artikel.classList.add('efek-masuk');
+            
+            renderKode('kode-transisi', `<article class="efek-masuk">\n  Isi Halaman\n</article>`, `@keyframes masukBawah {\n  from { transform: translateY(40px); }\n  to { transform: translateY(0); }\n}\n.efek-masuk {\n  animation: masukBawah 0.8s;\n}`);
+        }
+
+        function gantiSection() {
+            const wadah = document.getElementById('section-transisi');
+            const konten = document.getElementById('konten-section');
+            
+            wadah.classList.remove('efek-masuk');
+            wadah.classList.add('efek-hilang');
+
+            renderKode('kode-transisi', `<div class="efek-hilang">\n  Section Lama\n</div>`, `@keyframes hilangAtas {\n  from { opacity: 1; }\n  to { opacity: 0; transform: translateY(-40px); }\n}\n.efek-hilang {\n  animation: hilangAtas 0.6s;\n}`);
+
+            setTimeout(() => {
+                if(sectionAktif === 1) {
+                    konten.innerHTML = `
+                        <h4 class="text-xl font-bold text-slate-700 mb-2 mt-4 border-l-4 border-blue-500 pl-3">Ragam Lomba Hari Kedua</h4>
+                        <p>Selain pameran seni, kompetisi olahraga dan e-sports juga turut memeriahkan pekan ini. Pertandingan final basket akan diadakan di lapangan utama pada hari Rabu siang, disusul dengan turnamen persahabatan Mobile Legends di ruang multimedia.</p>
+                        <p class="mt-4">Tim OSIS telah bekerja keras menyiapkan segala fasilitas.</p>
+                    `;
+                    sectionAktif = 2;
+                } else {
+                    konten.innerHTML = `
+                        <p>Kegiatan ekstrakurikuler dan kreativitas siswa memegang peranan yang sangat penting dalam pembentukan karakter. Pada minggu ini, sekolah kita menyelenggarakan Pekan Kreativitas Tahunan yang menampilkan berbagai karya seni, inovasi teknologi, dan penampilan budaya dari seluruh perwakilan kelas.</p>
+                        <aside id="artikel-aside" class="${currentAside} bg-yellow-50 border-l-4 border-yellow-500 p-4 text-sm font-semibold text-yellow-800 shadow-sm rounded mt-4">
+                            💡 <strong>Tahukah Kamu?</strong> SMAN 1 Nusantara telah memenangkan penghargaan sekolah terkreatif tingkat nasional selama 3 tahun berturut-turut!
+                        </aside>
+                        <p class="mt-4">Berbagai pameran telah disusun rapi di aula utama sekolah. Mulai dari lukisan dari ekstrakurikuler seni rupa, robotika sederhana karya klub sains, hingga mading tiga dimensi yang memukau.</p>
+                    `;
+                    sectionAktif = 1;
+                }
+                
+                wadah.classList.remove('efek-hilang');
+                void wadah.offsetWidth; // Reflow
+                wadah.classList.add('efek-masuk');
+                
+                setTimeout(() => {
+                    renderKode('kode-transisi', `<div class="efek-masuk">\n  Section Baru\n</div>`, `.efek-masuk {\n  animation: masukBawah 0.8s forwards;\n}`);
+                }, 100);
+            }, 600);
+        }
+
+        function aturGaleri(kelasBaru) {
+            document.getElementById('galeri-scroll').className = `flex gap-4 w-max ${kelasBaru}`;
+            currentGaleri = kelasBaru;
+            updateTampilanTombol('galeri', kelasBaru);
+            
+            let css = kelasBaru === 'scroll-mati' ? `.${kelasBaru} {\n  animation: none;\n}` :
+                      kelasBaru === 'scroll-lambat' ? `.${kelasBaru} {\n  animation: scrollKiri 20s linear infinite;\n}` :
+                      `.${kelasBaru} {\n  animation: scrollKiri 8s linear infinite;\n}`;
+            css += `\n\n@keyframes scrollKiri {\n  0% { transform: translateX(0); }\n  100% { transform: translateX(-50%); }\n}`;
+            renderKode('kode-galeri', `<div class="overflow-hidden">\n  <div class="${kelasBaru}">\n    <img src="foto1.jpg">...\n  </div>\n</div>`, css);
+        }
+
+        function aturGrid(kelasBaru) {
+            document.getElementById('artikel-grid').className = `transition-all duration-500 ${kelasBaru}`;
+            currentGrid = kelasBaru;
+            updateTampilanTombol('grid', kelasBaru);
+            
+            let css = kelasBaru === 'grid-3-kolom' ? `.${kelasBaru} {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}` :
+                      kelasBaru === 'grid-2-kolom' ? `.${kelasBaru} {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 16px;\n}` :
+                      `.${kelasBaru} {\n  display: grid;\n  grid-template-columns: 1fr;\n  gap: 16px;\n}`;
+            renderKode('kode-grid', `<div class="${kelasBaru}">\n  <img src="karya1.jpg">\n  <img src="karya2.jpg">\n  <img src="karya3.jpg">\n</div>`, css);
+        }
+
+        function aturSisipan(kelasBaru) {
+            document.getElementById('gambar-sisipan').className = `shadow-sm border-2 border-white ${kelasBaru}`;
+            currentSisipan = kelasBaru;
+            updateTampilanTombol('sisipan', kelasBaru);
+            
+            let css = kelasBaru === 'sisipan-kiri' ? `.${kelasBaru} {\n  float: left;\n  margin-right: 15px;\n}` :
+                      kelasBaru === 'sisipan-kanan' ? `.${kelasBaru} {\n  float: right;\n  margin-left: 15px;\n}` :
+                      `.${kelasBaru} {\n  display: none;\n}`;
+            renderKode('kode-sisipan', `<p>\n  <img class="${kelasBaru}">\n  Teks paragraf...\n</p>`, css);
+        }
+
+        // ==========================================
+        // INISIALISASI SAAT HALAMAN DIMUAT
+        // ==========================================
+        window.onload = function() {
+            // Jalankan fungsi satu per satu agar kotak kodenya terisi pertama kali
+            aturJudul(currentJudul);
+            aturGambar(currentGambar);
+            aturTeks(currentTeks);
+            aturAside(currentAside);
+            aturCatatan(currentCatatan);
+            aturAnimasi(currentAnimasi);
+            aturGaleri(currentGaleri);
+            aturGrid(currentGrid);
+            aturSisipan(currentSisipan);
+            
+            // Set transisi awal manual karena fungsinya spesifik
+            renderKode('kode-transisi', `<article class="efek-masuk">\n  Isi Halaman\n</article>`, `.efek-masuk {\n  animation: masukBawah 0.8s;\n}`);
+        };
+    </script>
+</body>
+</html>
